@@ -1,10 +1,12 @@
 import "./App.css";
+import { Home } from "./components/subpages/home/home";
 
 function App() {
 	return (
 		<>
-			<div>
-				<h1>Vite + React</h1>
+			<div className="">
+				<h1>Pokedex</h1>
+				<Home/>
 			</div>
 		</>
 	);

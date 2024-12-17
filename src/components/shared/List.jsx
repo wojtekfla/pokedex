@@ -1,26 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "./Card";
 
-export function List({ data }) {
-	const [pokemons, setPokemons] = useState([]);
+export function List() {
+	const [data, setData] = useState([]);
+	// fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=10')
+	// fetch("https://pokeapi.co/api/v2/pokemon/1")
 
-	function handlePokemonsData(data) {}
+	const URL = "https://pokeapi.co/api/v2/";
 
-	// console.log("List", data);
-	// data.forEach((pokemon) => {
-	// 	const pokeUrl = pokemon.url;
-	// 	console.log("pokeUrl", pokeUrl);
-	// 	fetch(pokeUrl)
-	// 		.then((res) => res.json())
-	// 		.then((res) => console.log(res))
-	// 		.then((res) => {
-	// 			setPokemons((prevData) => [...prevData, res]);
-	// 		});
-	// });
+	useEffect(() => {
+		fetch("https://pokeapi.co/api/v2/pokemon?limit=10")
+			.then((res) => res.json())
+			.then(function (data) {
+				console.log('data raw', data)
+				data.results.forEach((pokemon) => {
+					console.log(pokemon);
+					fetchPokemonsDetails(pokemon);
+					
+				});
+			});
+
+		function fetchPokemonsDetails(pokemons) {
+			let url = pokemons.url;
+			fetch(url)
+				.then((res) => res.json())
+				.then(function (pokeData) {
+					setData((prev) => [...prev, pokeData]);
+				});
+		}
+	}, []);
+
+	if (data.length === 0) {
+		return <p>Loading ...</p>;
+	}
+
+	console.log('data', data)
 
 	return (
 		<ul>
 			<h2>Pokemony ...</h2>
+			{data && data.map((pokemon, index) => (
+				<li key={index}>{pokemon.name}</li>
+			))}
+
 			{/* {data.results.map((result, index) => (
 
         <Card props={result.url} key={index} />

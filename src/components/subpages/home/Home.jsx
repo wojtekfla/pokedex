@@ -7,27 +7,16 @@ export function Home() {
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
 
-	useEffect(() => {
-		// fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=10')
-		// fetch("https://pokeapi.co/api/v2/pokemon/1")
-		fetch("https://pokeapi.co/api/v2/pokemon?limit=5")
-			.then((res) => res.json())
-			.then((res) => {
-				// console.log("response", res);
-				setData(res.results);
-			});
-	}, []);
+function fetchPokemons () {
 
-	console.log("data", data);
+}
 
-	if (data.length === 0) {
-		return <p>Loading ...</p>
-	}
+	
 
 	return (
 		<>
 			<p>{data.name}</p>
-			<List data={data}/>
+			<List/>
 			{/* <img className="w-52 h-52" src={data.sprites.front_default}></img> */}
 		</>
 

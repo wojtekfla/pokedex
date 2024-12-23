@@ -14,6 +14,7 @@ export function Card ({props, className}) {
   return (
     <li className={className}>
       <div>
+        Karta pokemona
        {/* <p>Name: {getPokemon().name}</p> */}
       </div>
     </li>

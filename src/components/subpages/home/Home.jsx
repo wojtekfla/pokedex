@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
 import { Card } from "../../shared/Card";
 import { List } from "../../shared/List";
-// fetch('https://pokeapi.co/api/v2/?limit=20/')
 
-export function Home() {
+export function Home({ className }) {
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
 
 function fetchPokemons () {
 
 }
-
 	
-
 	return (
 		<>
-			<p>{data.name}</p>
-			<List/>
+			<List />
+			{/* <div className="px-3 py-1">Home alone</div> */}
+			{/* <p>{data.name}</p>
+			<List/> */}
 			{/* <img className="w-52 h-52" src={data.sprites.front_default}></img> */}
 		</>
 

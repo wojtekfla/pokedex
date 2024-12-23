@@ -1,15 +1,12 @@
 import "./App.css";
-import { Home } from "./components/subpages/home/home";
+import { Layout } from "./components/Layout/Layout.jsx";
+import { Outlet } from "react-router-dom";
 
-function App() {
+export function App() {
 	return (
-		<>
-			<div className="">
-				<h1>Pokedex</h1>
-				<Home/>
-			</div>
-		</>
+		<Layout >
+			<Outlet />
+		</Layout>
 	);
 }
 
-export default App;

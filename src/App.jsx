@@ -3,10 +3,10 @@ import { Layout } from "./components/Layout/Layout.jsx";
 import { Outlet } from "react-router-dom";
 
 export function App() {
-	return (
-		<Layout >
-			<Outlet />
-		</Layout>
-	);
+  return (
+    <>
+      <Layout />
+      <Outlet />
+    </>
+  );
 }
-

@@ -12,48 +12,38 @@ export function List() {
 	const BASE_URL = "https://pokeapi.co/api/v2";
 
 	useEffect(() => {
-		fetch(`${BASE_URL}/pokemon?limit=10`)
+		fetch(`${BASE_URL}/pokemon?limit=15`)
 			.then((res) => res.json())
 			.then((data) => {
 				// console.log('data raw', data)
 				data.results.forEach((pokemon) => {
 					fetchPokemonsDetails(pokemon);
-					// console.log("data 2", data)
 				});
 			})
 			// .finally(console.log('finally'))
 			.finally(() => {
 				setIsLoading(false);
 			});
+		return setPokeData ([])
+
 	}, []);
 
 	function filterPokemonsData(pokemonsArray) {
 		let array = []
-		pokemonsArray.map(( { id, name, height, weight, base_experience, sprites :{front_default}  } ) => 
+		pokemonsArray.map(( { id, name, height, weight, base_experience, abilities: ability, sprites :{front_default}  } ) => 
 			array.push( {
 				id: id,
 				name: name,
 				height: height,
 				weight: weight,
 				base_exp: base_experience,
-				url: front_default
+				img: front_default,
+				ability: ability[0].ability.name
 			})
 		)
 		console.log('array', array)
 		setPokeData(array)
 		console.log("POKE DATA", pokeData)
-
-		// pokemonsArray.forEach((el) => {
-		// 	console.log(el.name);
-		// });
-		// const pokeArr = pokemonsArray.map((el) => el.name);
-		// console.log("poke arr", pokeArr);
-		// // const { name, weight, height} = pokemonsArray
-		// pokemonsArray.map(
-		// 	({ name }, index) => {
-		// 		setPokeData((prev) => [...prev, name]);
-		// 	}
-		//	)
 
 	}
 

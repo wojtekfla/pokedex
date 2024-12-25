@@ -8,31 +8,36 @@ export function PokemonCard({ pokemon }) {
         return { res };
       });
   };
+  const { name, img, height, weight, base_exp, ability } = pokemon;
 
-  console.log("pokemon", pokemon);
-  const { name, url, height, weight, base_exp } = pokemon;
-  // console.log(pokemon.id)
-
-  const pokemonObj = {
-    id: 1,
-    name: "bulbasaur",
-    height: 7,
-    weight: 69,
-    base_exp: 64,
-    url: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-  };
+  function capitalizeFirstLetter (string) {
+    const newName = string.charAt(0).toUpperCase() + string.slice(1)
+    return newName
+  }
 
   return (
     <div className="">
-      <li className="list-none bg-gradient-to-r from-sky-100 to-sky-200">
-        <div className="bg-[url(pokemon.url)]">
-          <img src={pokemon.url} />
-          <p>{pokemon.name}</p>
-          <div>
-            <PokeCardInfoWrapper attribute={height}>Height</PokeCardInfoWrapper>
-            <PokeCardInfoWrapper attribute={weight}>Weight</PokeCardInfoWrapper>
-            <PokeCardInfoWrapper attribute={base_exp}>Base experience</PokeCardInfoWrapper>
-            <PokeCardInfoWrapper >Ability</PokeCardInfoWrapper>
+      <li className="list-none m-1 rounded-md bg-gradient-to-r from-sky-100 to-sky-200">
+        <div className="flex flex-col">
+          <img className="my-4 mx-auto w-3/5 aspect-square" src={img} />
+          <p className="mx-auto pb-2 text-lg font-bold">{capitalizeFirstLetter(name)}</p>
+          <div className="flex justify-around">
+            <div className="flex flex-col justify-center mx-auto text-xs text-center py-2">
+              <PokeCardInfoWrapper attribute={height}>
+                Height
+              </PokeCardInfoWrapper>
+              <PokeCardInfoWrapper attribute={weight}>
+                Weight
+              </PokeCardInfoWrapper>
+            </div>
+            <div className="flex flex-col justify-center mx-auto text-xs text-center py-2">
+              <PokeCardInfoWrapper attribute={base_exp}>
+                Base experience
+              </PokeCardInfoWrapper>
+              <PokeCardInfoWrapper attribute={ability}>
+                Ability
+              </PokeCardInfoWrapper>
+            </div>
           </div>
         </div>
       </li>

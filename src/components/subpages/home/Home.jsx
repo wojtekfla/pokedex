@@ -12,8 +12,8 @@ export function Home() {
 	return (
 		<>
 			<SearchPokemons />
-			{/* <PokemonsList /> */}
-			<List />
+			<PokemonsList />
+			{/* <List /> */}
 
 			{/* <img className="w-52 h-52" src={data.sprites.front_default}></img> */}
 		</>

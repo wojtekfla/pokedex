@@ -15,12 +15,10 @@ export function List() {
 		fetch(`${BASE_URL}/pokemon?limit=15`)
 			.then((res) => res.json())
 			.then((data) => {
-				// console.log('data raw', data)
 				data.results.forEach((pokemon) => {
 					fetchPokemonsDetails(pokemon);
 				});
 			})
-			// .finally(console.log('finally'))
 			.finally(() => {
 				setIsLoading(false);
 			});
@@ -30,14 +28,14 @@ export function List() {
 
 	function filterPokemonsData(pokemonsArray) {
 		let array = []
-		pokemonsArray.map(( { id, name, height, weight, base_experience, abilities: ability, sprites :{front_default}  } ) => 
+		pokemonsArray.map(( { id, name, height, weight, base_experience, abilities: ability, sprites} ) => 
 			array.push( {
 				id: id,
 				name: name,
 				height: height,
 				weight: weight,
 				base_exp: base_experience,
-				img: front_default,
+				img: sprites.other.dream_world.front_default,
 				ability: ability[0].ability.name
 			})
 		)
@@ -112,3 +110,20 @@ export function List() {
 		</>
 	);
 }
+
+
+
+// pokemonsArray.map(( { id, name, height, weight, base_experience, abilities: ability, sprites :{front_default}  } ) => 
+// 	array.push( {
+// 		id: id,
+// 		name: name,
+// 		height: height,
+// 		weight: weight,
+// 		base_exp: base_experience,
+// 		img: front_default,
+// 		ability: ability[0].ability.name
+// 	})
+// )
+
+
+

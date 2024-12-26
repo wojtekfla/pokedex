@@ -23,7 +23,7 @@ const routes = [
 export function Layout() {
   return (
     <>
-      <NavBar className="my-2 flex min-h-12 items-center justify-between bg-blue-200 p-2">
+      <NavBar className="py-3 flex min-h-12 items-center justify-between bg-blue-200 p-2">
         <Wrapper className="flex cursor-pointer">
           <NavLink to="/">
             <div className="px-3 py-1">Home</div>

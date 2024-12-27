@@ -152,7 +152,6 @@ export function Home() {
   useEffect(() => {
     if (data) {
       setPokemonsData(data)
-      console.log('home data', pokemonsData)
     }
   
   }, [data]);
@@ -162,16 +161,9 @@ export function Home() {
       <SearchPokemons />
       <PokemonsList pokemonsData={pokemonsData} />
       {/* <List /> */}
-
-      {/* <img className="w-52 h-52" src={data.sprites.front_default}></img> */}
     </>
 
-    // <div>{data.map((pokemon) => (
-    //   <>
-    //   <div>{pokemon.name}</div>
-    //   {/* <div>{pokemon.image}</div> */}
-    //   </>
-    // ))}</div>
+
   );
 }
 

@@ -8,7 +8,8 @@ export function PokemonCard({ pokemon }) {
         return { res };
       });
   };
-  const { name, img, height, weight, base_exp, ability } = pokemon;
+  const { name, img, height, weight, base_exp, ability, id, isfavorite } = pokemon;
+  
 
   function capitalizeFirstLetter(string) {
     const newName = string.charAt(0).toUpperCase() + string.slice(1);
@@ -17,12 +18,12 @@ export function PokemonCard({ pokemon }) {
 
   return (
     <div className="">
-      <li className="m-1 list-none rounded-md bg-gradient-to-r from-sky-100 to-sky-200">
+      <li onClick={()=> console.log({id})} id={id}  className="m-1 list-none rounded-md bg-gradient-to-r from-sky-100 to-sky-200">
         <div className="flex flex-col">
           <div className="flex">
             <div></div>
             <img className="mx-auto my-4 aspect-square w-3/5" src={img} />
-            <div>
+            <button className="" onClick={(e)=> console.log(e.target.id)}>
               <svg
                 width="24"
                 height="24"
@@ -36,7 +37,7 @@ export function PokemonCard({ pokemon }) {
                   fill="black"
                 />
               </svg>
-            </div>
+            </button>
           </div>
 
           <p className="mx-auto pb-2 text-lg font-bold">

@@ -25,6 +25,7 @@ export function useFetchPokemons(url) {
           base_exp: base_experience,
           img: sprites.other.dream_world.front_default,
           ability: ability[0].ability.name,
+          isfavorite: false
         }),
     );
     console.log("array", array);
@@ -40,22 +41,18 @@ export function useFetchPokemons(url) {
           throw new Error("failed to get response");
         }
         const data = await response.json();
-        console.log(data);
         if (data.results) {
           const secondResponse = await data.results.map(async (el) => {
             const res = await fetch(el.url);
             return await res.json();
           });
           const data2 = await Promise.all(secondResponse);
-          console.log('data2', data2)
           filterPokemonsData(data2);
-          
         }
       } catch (error) {
         setError(error.message);
       } finally {
         setIsLoading(false);
-        // filterPokemonsData(data);
         
       }
     };
@@ -66,8 +63,6 @@ export function useFetchPokemons(url) {
       setIsLoading(false);
     };
   }, [url]);
-
-  
 
   return { data, error, isLoading };
 }

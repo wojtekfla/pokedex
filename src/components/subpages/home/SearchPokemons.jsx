@@ -4,7 +4,7 @@ import { Button } from "../../shared/Button"
 export function SearchPokemons () {
 
   const [name, setName] = useState('')
-  console.log("name", name)
+  // console.log("name", name)
 
   return (
 

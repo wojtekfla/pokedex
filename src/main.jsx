@@ -1,17 +1,18 @@
 // import { StrictMode } from 'react'
-import { createRoot } from "react-dom/client";
 import "./index.css";
-import { App } from "./App.jsx";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { App } from "./App.jsx";
 import {
-  Favorites,
-  Wrapper,
+  Favourites,
   Home,
   Arena,
   Edit,
   Ranking,
-  Logout,
+  LoginForm,
 } from "./components/index.js";
+import { PokeDataProvider } from "./context/PokeDataContext.jsx";
+import { FavouritesProvider } from "./context/FavouritesContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,18 +20,22 @@ const router = createBrowserRouter([
     path: "/",
     children: [
       { element: <Home />, path: "/" },
-      { element: <Favorites />, path: "/favorites" },
+      { element: <Favourites />, path: "/favourites" },
       { element: <Arena />, path: "/arena" },
       { element: <Ranking />, path: "/ranking" },
       { element: <Edit />, path: "/edit" },
-      { element: <Logout />, path: "/logout" },
+      { element: <LoginForm />, path: "/loginform" },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <>
-      <RouterProvider router={router} />
+    <PokeDataProvider>
+      <FavouritesProvider>
+        <RouterProvider router={router} />
+      </FavouritesProvider>
+    </PokeDataProvider>
   </>,
 );
 

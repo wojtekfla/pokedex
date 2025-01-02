@@ -1,29 +1,20 @@
-import {
-  Favorites,
-  NavBar,
-  Wrapper,
-  Home,
-  Arena,
-  Edit,
-  Ranking,
-  Logout,
-} from "../index.js";
+import { NavBar, Wrapper } from "../index.js";
 import { NavLink } from "react-router-dom";
 import { Button } from "../shared/Button.jsx";
 
 const routes = [
   { name: "Home", id: 1, path: "/" },
-  { name: "Favorites", id: 2, path: "favorites" },
+  { name: "Favourites", id: 2, path: "favourites" },
   { name: "Arena", id: 3, path: "arena" },
   { name: "Ranking", id: 4, path: "ranking" },
   { name: "Edit", id: 5, path: "edit" },
-  { name: "Logout", id: 6, path: "logout" },
+  { name: "Login", id: 6, path: "loginform" },
 ];
 
 export function Layout() {
   return (
     <>
-      <NavBar className="py-3 flex min-h-12 items-center justify-between bg-blue-200 p-2">
+      <NavBar className="flex min-h-12 items-center justify-between bg-blue-200 p-2 py-3">
         <Wrapper className="flex cursor-pointer">
           <NavLink to="/">
             <div className="px-3 py-1">Home</div>
@@ -31,9 +22,9 @@ export function Layout() {
           {/* <Home className="px-3 py-1" /> */}
         </Wrapper>
         <Wrapper className="flex justify-center gap-4">
-          <NavLink to="favorites">
+          <NavLink to="favourites">
             <Button className="rounded bg-sky-500 px-3 py-1 text-white">
-              Favorites
+              Favourites
             </Button>
           </NavLink>
           <NavLink to="arena">
@@ -51,9 +42,9 @@ export function Layout() {
               Edit
             </Button>
           </NavLink>
-          <NavLink to="logout">
+          <NavLink to="loginform">
             <Button className="rounded bg-sky-500 px-3 py-1 text-white">
-              Logout
+              Login
             </Button>
           </NavLink>
         </Wrapper>

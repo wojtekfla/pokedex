@@ -1,35 +1,17 @@
-import { useContext } from "react";
-import { PokeDataContext } from "../../../context/PokeDataContext";
-import { FavouritesContext } from "../../../context/FavouritesContext";
 import { PokeCardWrapper } from "../../shared/PokemonCardWrapper";
 
-export function PokemonCard({ pokemon, props}) {
+export function FavouritesCard ({pokemon, props}) {
   const { name, img, height, weight, base_exp, ability } = pokemon;
-
-  // console.log('props in card', props)
-  const {pokemonsData, setFavouritesData} = props
 
   function capitalizeFirstLetter(string) {
     const newName = string.charAt(0).toUpperCase() + string.slice(1);
     return newName;
   }
 
-  function handleFavoriteClick() {
-    console.log('in pok card');
-    pokemon.isfavorite = !pokemon.isfavorite;
-    let favPokemon = pokemonsData.filter((poke) => poke.id === pokemon.id)
-    let fav2 = favPokemon[0]
-    console.log('fav2 poke', fav2)
-    console.log('fav pok', favPokemon)
-    setFavouritesData((prev) => ([...prev, {...fav2}]))
-    //console.log("fav poke", favPokemon);
-
-  }
-
-  return (
+return (
     <div className="">
       <li
-        onClick={handleFavoriteClick}
+        // onClick={handleFavoriteClick}
         className="m-1 list-none rounded-md bg-gradient-to-r from-sky-100 to-sky-200"
       >
         <div className="flex flex-col">
@@ -69,7 +51,7 @@ export function PokemonCard({ pokemon, props}) {
           </div>
 
           <p className="mx-auto pb-2 text-lg font-bold">
-            {capitalizeFirstLetter(name)}
+            {/* {capitalizeFirstLetter(name)} */}
           </p>
           <div className="flex justify-around">
             <div className="mx-auto flex flex-col justify-center py-2 text-center text-xs">

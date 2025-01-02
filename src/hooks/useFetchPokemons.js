@@ -28,7 +28,7 @@ export function useFetchPokemons(url) {
           isfavorite: false
         }),
     );
-    console.log("array", array);
+    // console.log("array", array);
     setData(array);
   }
 
@@ -52,8 +52,7 @@ export function useFetchPokemons(url) {
       } catch (error) {
         setError(error.message);
       } finally {
-        setIsLoading(false);
-        
+        setIsLoading(false);       
       }
     };
 

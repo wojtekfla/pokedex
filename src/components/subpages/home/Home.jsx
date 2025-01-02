@@ -6,23 +6,40 @@ import { SearchPokemons } from "./SearchPokemons";
 import { PokemonsList } from "./PokemonsList";
 import { PokemonCard } from "./PokemonCard";
 
+const FAV_URL = 'http://localhost:3000/favourites'
+
 export function Home() {
-  const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
-  const { favouritesData, setFavouritesData} = useContext(FavouritesContext)
+  const { pokemonsData, setPokemonsData, toggleFavourite } = useContext(PokeDataContext);
+  const { favouritesData, setFavouritesData } = useContext(FavouritesContext);
   // console.log("context in home", pokemonsData);
 
-  function handleFavorites2(pokemon, id, ) {
-    // e.stopPropagation()
-    let favPokemon = pokemonsData.forEach.filter((poke) => poke.id === id);
-    setFavouritesData((prev) => ({...prev}, favPokemon))
-    console.log("fav pokemons", favouritesData);
+  const addData = async (url, bodyData) => {
+    try {
+      const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(bodyData),
+      headers: {
+        "Content-Type": "application/json",
+        },
+      })
+    } catch (e) {
+      console.error('Error', e)
+    }
   }
 
-  useEffect (() => {
-    console.log('effect pokemons', pokemonsData)
-    console.log('effect fav pokemons', favouritesData)
-  }, [pokemonsData, favouritesData])
+  function handleFavouriteClick(newFavouritePokemon) {
+    console.log("fav poke handled", newFavouritePokemon);
+    setFavouritesData((prev) => ({ ...prev, newFavouritePokemon} ));
+    toggleFavourite(newFavouritePokemon.id)
+    // tu zapis do json
+    addData(FAV_URL, newFavouritePokemon)
+    
+  }
 
+  useEffect(() => {
+    console.log("effect pokemons", pokemonsData);
+    console.log("effect fav pokemons", favouritesData);
+  }, [pokemonsData, favouritesData]);
 
   return (
     <>
@@ -34,8 +51,8 @@ export function Home() {
               <PokemonCard
                 pokemon={pokemon}
                 key={pokemon.id}
-                // handleFavorites={handleFavorites}
-                props={{pokemonsData, setFavouritesData}}
+                handleClick={handleFavouriteClick}
+                props={{ pokemonsData, setFavouritesData }}
               />
             );
           })}

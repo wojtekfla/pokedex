@@ -25,7 +25,7 @@ export function useFetchPokemons(url) {
           base_exp: base_experience,
           img: sprites.other.dream_world.front_default,
           ability: ability[0].ability.name,
-          isfavorite: false
+          isFavourite: false
         }),
     );
     // console.log("array", array);

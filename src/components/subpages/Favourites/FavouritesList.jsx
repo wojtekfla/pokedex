@@ -6,7 +6,7 @@ import { useFetch } from "../../../hooks/useFetch";
 
 const FAV_URL = 'http://localhost:3000/favourites'
 
-export function FavouritesList() {
+export function FavouritesList({handleClick}) {
   const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
   const { favouritesData, setFavouritesData} = useContext(FavouritesContext)
 
@@ -14,6 +14,7 @@ export function FavouritesList() {
     try {
       const res = await fetch(FAV_URL)
       const json = await res.json()
+      console.log("json", json)
       setFavouritesData(json)
       } catch (e) {
         console.error('Error', e)
@@ -40,6 +41,7 @@ export function FavouritesList() {
   }
 
   useEffect (() => {
+    loadFavourites(FAV_URL)
     console.log('effect fav LIST poke', favouritesData)
     const favToAdd = {favouritesData}
     console.log('favito-add', favToAdd)
@@ -50,18 +52,28 @@ export function FavouritesList() {
   return (
     <>
       <div className="grid grid-cols-4">
-        {favouritesData.map((pokemon) => {
+        {favouritesData.length > 0 && favouritesData.map((pokemon) => {
           return (
             <FavouritesCard 
               pokemon={pokemon}
               key={pokemon.id}
+              handleClick={handleClick}
               // name={pokemon.name}
               // handleFavorites={handleFavorites}
               // props={{ pokemonsData, setFavouritesData }}
             />
           );
-        })}
+        }) }
       </div>
     </>
   );
 }
+
+
+    // useEffect (() => {
+  //   console.log('effect fav LIST poke', favouritesData)
+  //   const favToAdd = {favouritesData}
+  //   console.log('favito-add', favToAdd)
+  //   // tu zrobiła mi się pętla i zapiywało się do jsona mnówstwo danych
+  //   //addData(FAV_URL, favouritesData)
+  // }, [])

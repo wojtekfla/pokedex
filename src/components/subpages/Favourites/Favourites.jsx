@@ -5,16 +5,16 @@ import { FavouritesContext } from "../../../context/FavouritesContext";
 import { useContext } from "react";
 import { Button } from "../../shared/Button";
 
+const FAV_URL = 'http://localhost:3000/favourites'
+
 export function Favourites() {
     const { pokemonsData, setPokemonsData, toggleFavourite } = useContext(PokeDataContext);
     const { favouritesData, setFavouritesData } = useContext(FavouritesContext);
 
   function handleFavouriteClick(newFavouritePokemon) {
     console.log("fav poke handled", newFavouritePokemon);
-    // const newFavList = favouritesData.map((item) => {
-    //   Number(item.id) !== Number(id)
-    // })
-    // console.log('nev fav list', newFavList)
+    console.log('pokemon do skas z fav', newFavouritePokemon.id)
+
 
     // const newData = pokemonsData.map((item) => {
     //   return Number(item.id) === Number(id) ? {...item, isFavourite: true} : {...item}
@@ -25,10 +25,27 @@ export function Favourites() {
     
   }
 
+  function handleDeleteFavourite(id) {
+    fetch(`${FAV_URL}/${id}`, {
+      method: "DELETE"
+    })
+    .then((res) => {
+      if(res.ok) {
+        setFavouritesData((prev) => 
+          prev.filter((item) => item.id !== id))
+      } else {
+        throw new Error ('Błąd podczas usuwania')
+      }
+    })
+    .catch((e)=> {
+      alert(e.message)
+    })
+  }
+
   return (
     <>
       <h2><strong>Moje ulubione pokemony</strong></h2>
-      <FavouritesList handleClick={handleFavouriteClick} />
+      <FavouritesList handleClick={handleDeleteFavourite} />
 
     </>
   );

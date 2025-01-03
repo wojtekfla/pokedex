@@ -14,7 +14,7 @@ export function FavouritesCard({ pokemon, props, handleClick }) {
     const newFavouritePokemon = pokemon;
     newFavouritePokemon.isFavourite = !pokemon.isFavourite;
     console.log('zmiana favorite', newFavouritePokemon)
-    handleClick(newFavouritePokemon);
+    handleClick(newFavouritePokemon.id);
   };
 
   return (

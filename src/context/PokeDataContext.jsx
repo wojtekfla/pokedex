@@ -7,7 +7,7 @@ export const PokeDataProvider = ({ children }) => {
 
   const toggleFavourite = (id) => {
     const newData = pokemonsData.map((item) => {
-      return Number(item.id) === Number(id) ? {...item, isFavourite: true} : {...item}
+      return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite} : {...item}
     })
     console.log('DATA in context', newData)
     setPokemonsData(newData)

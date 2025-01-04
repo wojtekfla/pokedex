@@ -31,8 +31,7 @@ export function Home() {
     console.log("fav poke handled", newFavouritePokemon);
     setFavouritesData((prev) => ({ ...prev, newFavouritePokemon} ));
     toggleFavourite(newFavouritePokemon.id)
-    // tu zapis do json
-    addData(FAV_URL, newFavouritePokemon)
+    addData(FAV_URL, {...newFavouritePokemon, isFavourite: true})
     
   }
 

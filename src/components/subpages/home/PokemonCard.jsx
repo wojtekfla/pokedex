@@ -32,7 +32,7 @@ export function PokemonCard({ pokemon, props, handleClick }) {
 
   const handleFavIconClick = () => {
     const newFavouritePokemon = pokemon;
-    newFavouritePokemon.isFavourite = !pokemon.isFavourite;
+    // newFavouritePokemon.isFavourite = !pokemon.isFavourite;
     handleClick(newFavouritePokemon);
   };
 

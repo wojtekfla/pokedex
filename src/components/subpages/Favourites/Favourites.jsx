@@ -33,6 +33,7 @@ export function Favourites() {
       if(res.ok) {
         setFavouritesData((prev) => 
           prev.filter((item) => item.id !== id))
+        toggleFavourite(id)
       } else {
         throw new Error ('Błąd podczas usuwania')
       }

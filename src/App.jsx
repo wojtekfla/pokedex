@@ -5,10 +5,7 @@ import { useFetchPokemons } from "./hooks/useFetchPokemons.js";
 
 import { Layout } from "./components/Layout/Layout.jsx";
 import { Outlet } from "react-router-dom";
-import {
-  PokeDataContext,
-  PokeDataProvider,
-} from "./context/PokeDataContext.jsx";
+import { PokeDataContext } from "./context/PokeDataContext.jsx";
 
 const BASE_URL = "https://pokeapi.co/api/v2";
 
@@ -21,7 +18,7 @@ export function App() {
   // const [favoritePokemons, setFavoritePokemons] = useState([])
 
   useEffect(() => {
-     setPokemonsData(data);
+    setPokemonsData(data);
   }, [data]);
 
   return (

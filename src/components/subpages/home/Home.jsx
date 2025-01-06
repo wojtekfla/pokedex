@@ -15,7 +15,7 @@ export function Home() {
 
   const addData = async (url, bodyData) => {
     try {
-      const res = await fetch(url, {
+      const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify(bodyData),
       headers: {

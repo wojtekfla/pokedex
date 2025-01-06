@@ -1,6 +1,21 @@
 {
+  "users": [
+    {
+      "userName": "Wojtek",
+      "email": "w@w.pl",
+      "password": "Qwerty123!",
+      "password2": "Qwerty123!",
+      "id": 1
+    },
+    {
+      "userName": "Tomek",
+      "email": "tom@o2.pl",
+      "password": "Qwerty123$",
+      "password2": "Qwerty123$",
+      "id": 2
+    }
+  ],
   "pokemons": [],
-  "users": [],
   "favourites": [],
   "custom": []
 }

@@ -1,8 +1,13 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { Button } from "../../shared/Button";
 
+import { LoginContext } from "../../../context/LoginContext";
+import { useContext } from "react";
 
 export function Login() {
+  const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext)
+
+
   return (
     <>
       {/* <div className="flex mt-2 max-h-8 justify-center"> */}

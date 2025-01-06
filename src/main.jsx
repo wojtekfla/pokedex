@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode } from "react";
 import "./index.css";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -10,13 +10,13 @@ import {
   Edit,
   Ranking,
   Login,
-  LoginForm
+  RegistrationForm,
+  LoginForm,
 } from "./components/index.js";
+
 import { PokeDataProvider } from "./context/PokeDataContext.jsx";
 import { FavouritesProvider } from "./context/FavouritesContext.jsx";
-import RegistrationForm from "./components/subpages/Login/RegistrationForm.jsx";
-
-
+import { LoginProvider } from "./context/LoginContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -28,22 +28,28 @@ const router = createBrowserRouter([
       { element: <Arena />, path: "/arena" },
       { element: <Ranking />, path: "/ranking" },
       { element: <Edit />, path: "/edit" },
-      { element: <Login />, path: "/login", children: [
-        {element: <RegistrationForm />, path: "/login/registration"},
-        {element: <LoginForm />, path: "/login/loginForm"}
-      ] },
+      {
+        element: <Login />,
+        path: "/login",
+        children: [
+          { element: <RegistrationForm />, path: "/login/registration" },
+          { element: <LoginForm />, path: "/login/loginForm" },
+        ],
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
-  
-  <StrictMode>,
-    <PokeDataProvider>
-      <FavouritesProvider>
-        <RouterProvider router={router} />
-      </FavouritesProvider>
-    </PokeDataProvider>
+  <StrictMode>
+    ,
+    <LoginProvider>
+      <PokeDataProvider>
+        <FavouritesProvider>
+          <RouterProvider router={router} />
+        </FavouritesProvider>
+      </PokeDataProvider>
+    </LoginProvider>
   </StrictMode>,
 );
 

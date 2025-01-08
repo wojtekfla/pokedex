@@ -13,6 +13,21 @@
       "password": "Qwerty123$",
       "password2": "Qwerty123$",
       "id": 2
+    },
+    {
+      "userName": "Krzysie",
+      "email": "qwe@qwe.pl",
+      "password": "Asdfgh!234",
+      "password2": "Asdfgh!234",
+      "id": 3
+    },
+    {
+      "userName": "Ada",
+      "email": "qwe@qwe",
+      "password": "!234Qwert",
+      "password2": "!234Qwert",
+      "hash": {},
+      "id": 4
     }
   ],
   "pokemons": [],

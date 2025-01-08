@@ -25,7 +25,10 @@ export function useFetchPokemons(url) {
           base_exp: base_experience,
           img: sprites.other.dream_world.front_default,
           ability: ability[0].ability.name,
-          isFavourite: false
+          isFavourite: false,
+          isArena: false,
+          win: 0,
+          loss: 0
         }),
     );
     // console.log("array", array);

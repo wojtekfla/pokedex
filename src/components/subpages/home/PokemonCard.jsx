@@ -6,7 +6,7 @@ import { LuSword } from "react-icons/lu";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoHeart } from "react-icons/io5";
 
-export function PokemonCard({ pokemon, props, handleClick }) {
+export function PokemonCard({ pokemon, props, handleClick, toggleArena }) {
   const { name, img, height, weight, base_exp, ability, isFavourite } = pokemon;
   const isPokemonFavourite = isFavourite;
 
@@ -36,6 +36,12 @@ export function PokemonCard({ pokemon, props, handleClick }) {
     handleClick(newFavouritePokemon);
   };
 
+  const handleToggleArenaClick = () => {
+    // const id = pokemon.id
+    // console.log(id)
+    toggleArena(pokemon)
+  }
+
   return (
     <div className="">
       <li className="m-1 list-none rounded-md bg-gradient-to-r from-sky-100 to-sky-200">
@@ -53,7 +59,7 @@ export function PokemonCard({ pokemon, props, handleClick }) {
                 </button>
               )}
               <button>
-                <LuSword className="size-6 min-h-8" />
+                <LuSword onClick={handleToggleArenaClick} className="size-6 min-h-8" />
               </button>
             </div>
           </div>

@@ -1,13 +1,15 @@
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { LoginContext } from "../../../context/LoginContext";
 
 const USERS_URL = "http://localhost:3000/users";
 
 export function LoginForm() {
   const [usersData, setUsersData] = useState(null);
   const [password, setPasword] = useState(null);
+  const { loggedUser, setLoggedUser } = useContext(LoginContext);
 
   const loginSchema = z.object({
     userName: z.string().min(1, { message: "User name is required!" }),
@@ -22,13 +24,12 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  useEffect(() => {
-    fetch(`${USERS_URL}`)
-      .then((response) => response.json())
-      .then((data) => setUsersData(data))
-      .then(() => console.log("efekt", usersData));
-  }, []);
-
+  // useEffect(() => {
+  //   fetch(`${USERS_URL}/?userName=${}`)
+  //     .then((response) => response.json())
+  //     .then((data) => setUsersData(data))
+  //     .then(() => console.log("efekt", usersData));
+  // }, []);
 
   const checkUserStatus = (data) => {
     const usersJson = getUsersData();
@@ -66,23 +67,31 @@ export function LoginForm() {
 
   const onSubmit = (data) => {
     console.log("submited data", data);
-    const nameToCheck = data.userName
-    console.log('name => ', nameToCheck)
-    console.log('users data', usersData)
-    const userLog = usersData.find((user) => {
-    return user.userName === nameToCheck}).userName
-    const logged = userLog? true : false
-    console.log(logged)
+
+    fetch(
+      `${USERS_URL}/?userName=${encodeURIComponent(data.userName)}&password=${encodeURIComponent(data.password)}`,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.length === 1) {
+          setLoggedUser(data[0]);
+        } else {
+          alert('nie ma uzytkownika')
+        }
+      });
+    // .then(() => console.log("efekt", usersData));
   };
 
   const onSubmit2 = (data) => {
     console.log("submited data", data);
-    const nameToCheck = data.userName
-    console.log('name => ', nameToCheck)
-    console.log('users data', usersData)
+    const nameToCheck = data.userName;
+    console.log("name => ", nameToCheck);
+    console.log("users data", usersData);
     const isUser = usersData.find((user) => {
-      return user.userName === nameToCheck}).userName
-    console.log(isUser)
+      return user.userName === nameToCheck;
+    }).userName;
+    console.log(isUser);
   };
 
   // const jsonData = getUsersData();
@@ -123,6 +132,7 @@ export function LoginForm() {
               {...register("password")}
               id="password"
               type="password"
+              value="Qwerty123!"
               className="border-2 border-l-neutral-300"
             />
             {errors.password && (
@@ -137,5 +147,3 @@ export function LoginForm() {
     </>
   );
 }
-
-

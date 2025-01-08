@@ -39,6 +39,15 @@ export function RegistrationForm() {
     console.log("dataJson", dataJson);
   };
 
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password); // Konwertuj hasło na bajty
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data); // Oblicz hash
+    const hashArray = Array.from(new Uint8Array(hashBuffer)); // Konwertuj wynik na tablicę bajtów
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join(''); // Na format hex
+    return hashHex;
+}
+
   async function addUser(data) {
     try {
       const response = await fetch(USERS_URL, {
@@ -69,6 +78,8 @@ export function RegistrationForm() {
 
   const onSubmit = (data) => {
     console.log("submited data", data);
+    data.hash = hashPassword (data.password)
+     
     addUser(data);
     // setFormData(data)
     // setIsFormSubmitted(true)

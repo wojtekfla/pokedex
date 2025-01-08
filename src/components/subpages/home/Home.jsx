@@ -35,6 +35,11 @@ export function Home() {
     
   }
 
+  function toggleArena(pokemonToArena) {
+    console.log("fav poke handled", pokemonToArena); 
+    toggleArena(pokemonToArena.id)
+  }
+
   useEffect(() => {
     console.log("effect pokemons", pokemonsData);
     console.log("effect fav pokemons", favouritesData);
@@ -52,6 +57,7 @@ export function Home() {
                 key={pokemon.id}
                 handleClick={handleFavouriteClick}
                 props={{ pokemonsData, setFavouritesData }}
+                toggleArena={toggleArena}
               />
             );
           })}

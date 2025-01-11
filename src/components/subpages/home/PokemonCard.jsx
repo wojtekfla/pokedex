@@ -6,11 +6,11 @@ import { LuSword } from "react-icons/lu";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoHeart } from "react-icons/io5";
 
-export function PokemonCard({ pokemon, props, handleClick, toggleArena }) {
+export function PokemonCard({ pokemon, handleFavouriteClick, toggleArena2 }) {
   const { name, img, height, weight, base_exp, ability, isFavourite } = pokemon;
   const isPokemonFavourite = isFavourite;
 
-  const { pokemonsData, setFavouritesData } = props;
+  // const { pokemonsData, setFavouritesData } = props;
   // console.log('fun z poklist', handleClick)
   // console.log('props in card', props)
 
@@ -19,27 +19,21 @@ export function PokemonCard({ pokemon, props, handleClick, toggleArena }) {
     return newName;
   }
 
-  function handleFavouriteClick123() {
-    console.log("in pok card");
-    pokemon.isFavourite = !pokemon.isFavourite;
-    let favPokemon = pokemonsData.filter((poke) => poke.id === pokemon.id);
-    let fav2 = favPokemon[0];
-    console.log("fav2 poke", fav2);
-    console.log("fav pok", favPokemon);
-
-    //console.log("fav poke", favPokemon);
-  }
-
   const handleFavIconClick = () => {
-    const newFavouritePokemon = pokemon;
+    // const newFavouritePokemon = pokemon;
+    const pokeId = pokemon.id
+    console.log('poke id', pokeId)
+    console.log('pokeCard fav poke', pokemon)
+    //console.log('newFavouritePokemon', newFavouritePokemon)
     // newFavouritePokemon.isFavourite = !pokemon.isFavourite;
-    handleClick(newFavouritePokemon);
+    handleFavouriteClick(pokemon);
+    // handleClick(pokemon)
   };
 
   const handleToggleArenaClick = () => {
     // const id = pokemon.id
     // console.log(id)
-    toggleArena(pokemon)
+    toggleArena2(pokemon)
   }
 
   return (
@@ -84,14 +78,3 @@ export function PokemonCard({ pokemon, props, handleClick, toggleArena }) {
     </div>
   );
 }
-
-// function handleFavoriteClick() {
-//   console.log('in pok card');
-//   pokemon.isfavorite = !pokemon.isfavorite;
-//   let favPokemon = pokemonsData.filter((poke) => poke.id === pokemon.id)
-//   let fav2 = favPokemon[0]
-//   console.log('fav2 poke', fav2)
-//   console.log('fav pok', favPokemon)
-//   setFavouritesData((prev) => ([...prev, {...fav2}]))
-//   //console.log("fav poke", favPokemon);
-// }

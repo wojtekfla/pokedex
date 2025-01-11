@@ -6,8 +6,8 @@ import { useFetch } from "../../../hooks/useFetch";
 
 const FAV_URL = 'http://localhost:3000/favourites'
 
-export function FavouritesList({handleClick}) {
-  const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
+export function FavouritesList({handleClick, handleFavorite}) {
+  const { pokemonsData, setPokemonsData, handleDataFromJson } = useContext(PokeDataContext);
   const { favouritesData, setFavouritesData} = useContext(FavouritesContext)
 
   const loadFavourites = async () => {
@@ -40,14 +40,14 @@ export function FavouritesList({handleClick}) {
     }
   }
 
-  useEffect (() => {
-    loadFavourites(FAV_URL)
-    console.log('effect fav LIST poke', favouritesData)
-    const favToAdd = {favouritesData}
-    console.log('favito-add', favToAdd)
-    // tu zrobiła mi się pętla i zapiywało się do jsona mnówstwo danych
-    //addData(FAV_URL, favouritesData)
-  }, [])
+  // useEffect (() => {
+  //   loadFavourites(FAV_URL)
+  //   console.log('effect fav LIST poke', favouritesData)
+  //   const favToAdd = {favouritesData}
+  //   console.log('favito-add', favToAdd)
+  //   // tu zrobiła mi się pętla i zapiywało się do jsona mnówstwo danych
+  //   //addData(FAV_URL, favouritesData)
+  // }, [])
 
   return (
     <>
@@ -59,7 +59,7 @@ export function FavouritesList({handleClick}) {
               key={pokemon.id}
               handleClick={handleClick}
               // name={pokemon.name}
-              // handleFavorites={handleFavorites}
+              handleFavorite={handleFavorite}
               // props={{ pokemonsData, setFavouritesData }}
             />
           );
@@ -69,11 +69,3 @@ export function FavouritesList({handleClick}) {
   );
 }
 
-
-    // useEffect (() => {
-  //   console.log('effect fav LIST poke', favouritesData)
-  //   const favToAdd = {favouritesData}
-  //   console.log('favito-add', favToAdd)
-  //   // tu zrobiła mi się pętla i zapiywało się do jsona mnówstwo danych
-  //   //addData(FAV_URL, favouritesData)
-  // }, [])

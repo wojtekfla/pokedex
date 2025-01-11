@@ -7,7 +7,6 @@ export const PokeDataProvider = ({ children }) => {
 
   const toggleFavourite = (id) => {
     const newData = pokemonsData.map((item) => {
-      console.log(item)
       return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
     })
     console.log('DATA in context', newData)
@@ -16,7 +15,6 @@ export const PokeDataProvider = ({ children }) => {
 
   const toggleArena = (id) => {
     const newData = pokemonsData.map((item) => {
-      console.log(item)
       return Number(item.id) === Number(id) ? {...item, isArena: !item.isArena}  : {...item}
     })
     console.log('DATA in context', newData)
@@ -28,6 +26,7 @@ export const PokeDataProvider = ({ children }) => {
     const newData = pokemonsData.map((item) => {
       const element = data.find((itemFromJson) => itemFromJson.id === item.id)
       if (element) {
+        // console.log('pokeContext element', element)
         return {...item, ...element}
       } else {
         return {...item}

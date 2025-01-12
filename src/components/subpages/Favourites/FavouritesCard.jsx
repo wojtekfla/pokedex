@@ -3,7 +3,7 @@ import { PokeCardWrapper } from "../../shared/PokemonCardWrapper";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { LuSword } from "react-icons/lu";
 
-export function FavouritesCard({ pokemon, handleClick, handleFavorite }) {
+export function FavouritesCard({ pokemon, handleFavourite, handleRemove }) {
   const { name, img, height, weight, base_exp, ability, isFavourite } = pokemon;
 
   const isPokemonFavourite = isFavourite;
@@ -16,10 +16,14 @@ export function FavouritesCard({ pokemon, handleClick, handleFavorite }) {
   const handleFavouriteIcon = () => {
     const newFavouritePokemon = pokemon;
     // newFavouritePokemon.isFavourite = !pokemon.isFavourite;
-    console.log("zmiana favorite", newFavouritePokemon);
-    // handleClick(newFavouritePokemon.id);
+    console.log("hanFav in fav Card", newFavouritePokemon);
+    handleFavourite(newFavouritePokemon.id);
     // handleFavouriteIcon(newFavouritePokemon)
   };
+
+  const handleRemoveFromFav = () => {
+    handleRemove(pokemon.id)
+  }
 
   return (
     <div className="">
@@ -29,15 +33,11 @@ export function FavouritesCard({ pokemon, handleClick, handleFavorite }) {
             <div></div>
             <img className="mx-auto my-4 aspect-square w-3/5" src={img} />
             <div className="flex flex-col justify-start px-1">
-              {isPokemonFavourite ? (
-                <button className="" onClick={handleFavouriteIcon}>
+              {isPokemonFavourite && (
+                <button className="" onClick={handleRemoveFromFav}>
                   <IoHeart className="size-6 h-3 min-h-8 text-red-500" />
                 </button>
-              ) : (
-                <button className="" onClick={handleFavouriteIcon}>
-                  <IoIosHeartEmpty className="size-6 min-h-8" />
-                </button>
-              )}
+              ) }
               <button>
                 <LuSword
                   // onClick={handleToggleArenaClick}

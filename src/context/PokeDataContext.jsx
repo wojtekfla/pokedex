@@ -5,13 +5,13 @@ export const PokeDataContext = createContext([])
 export const PokeDataProvider = ({ children }) => {
   const [pokemonsData, setPokemonsData] = useState([])
 
-  const toggleFavourite = (id) => {
-    const newData = pokemonsData.map((item) => {
-      return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
-    })
-    console.log('DATA in context', newData)
-    setPokemonsData(newData)
-  }
+  // const toggleFavourite = (id) => {
+  //   const newData = pokemonsData.map((item) => {
+  //     return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
+  //   })
+  //   console.log('DATA in context', newData)
+  //   setPokemonsData(newData)
+  // }
 
   const toggleArena = (id) => {
     const newData = pokemonsData.map((item) => {
@@ -21,7 +21,6 @@ export const PokeDataProvider = ({ children }) => {
     setPokemonsData(newData)
   }
   
-
   const handleDataFromJson = (data) => {
     const newData = pokemonsData.map((item) => {
       const element = data.find((itemFromJson) => itemFromJson.id === item.id)
@@ -36,8 +35,13 @@ export const PokeDataProvider = ({ children }) => {
   }
 
   return (
-    <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData, toggleFavourite, handleDataFromJson, toggleArena }}>
+    <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData,  handleDataFromJson, toggleArena }}>
       {children}
     </PokeDataContext.Provider>
   )
 }
+
+
+{/* <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData, toggleFavourite, handleDataFromJson, toggleArena }}>
+{children}
+</PokeDataContext.Provider> */}

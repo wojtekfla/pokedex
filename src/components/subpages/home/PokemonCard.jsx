@@ -6,13 +6,10 @@ import { LuSword } from "react-icons/lu";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoHeart } from "react-icons/io5";
 
-export function PokemonCard({ pokemon, handleFavouriteClick, toggleArena2 }) {
+export function PokemonCard({ pokemon, handleFavouriteClick, handleRemove, handleArena }) {
   const { name, img, height, weight, base_exp, ability, isFavourite } = pokemon;
   const isPokemonFavourite = isFavourite;
 
-  // const { pokemonsData, setFavouritesData } = props;
-  // console.log('fun z poklist', handleClick)
-  // console.log('props in card', props)
 
   function capitalizeFirstLetter(string) {
     const newName = string.charAt(0).toUpperCase() + string.slice(1);
@@ -20,20 +17,18 @@ export function PokemonCard({ pokemon, handleFavouriteClick, toggleArena2 }) {
   }
 
   const handleFavIconClick = () => {
-    // const newFavouritePokemon = pokemon;
-    const pokeId = pokemon.id
-    console.log('poke id', pokeId)
-    console.log('pokeCard fav poke', pokemon)
-    //console.log('newFavouritePokemon', newFavouritePokemon)
-    // newFavouritePokemon.isFavourite = !pokemon.isFavourite;
+    // const pokeId = pokemon.id
     handleFavouriteClick(pokemon);
-    // handleClick(pokemon)
   };
 
-  const handleToggleArenaClick = () => {
+  const handleRemoveFromFav = () => {
+    handleRemove(pokemon.id)
+  }
+
+  const handleArenaClick = () => {
     // const id = pokemon.id
     // console.log(id)
-    toggleArena2(pokemon)
+    handleArena(pokemon)
   }
 
   return (
@@ -44,16 +39,17 @@ export function PokemonCard({ pokemon, handleFavouriteClick, toggleArena2 }) {
             <img className="mx-auto my-4 aspect-square w-3/5" src={img} />
             <div className="flex flex-col justify-start px-1">
               {isPokemonFavourite ? (
-                <button className="" onClick={handleFavIconClick}>
+                <button className="" onClick={handleRemoveFromFav}>
                   <IoHeart className="size-6 min-h-8 text-red-500 h-3" />
                 </button>
+                
               ) : (
                 <button className="" onClick={handleFavIconClick}>
                   <IoIosHeartEmpty className="size-6 min-h-8" />
                 </button>
               )}
               <button>
-                <LuSword onClick={handleToggleArenaClick} className="size-6 min-h-8" />
+                <LuSword onClick={handleArenaClick} className="size-6 min-h-8" />
               </button>
             </div>
           </div>

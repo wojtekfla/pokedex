@@ -8,8 +8,8 @@ import { Button } from "../../shared/Button";
 const FAV_URL = 'http://localhost:3000/favourites'
 
 export function Favourites() {
-  const { pokemonsData, setPokemonsData, toggleFavourite } = useContext(PokeDataContext);
-  const { favouritesData, setFavouritesData } = useContext(FavouritesContext);
+  const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
+  const { favouritesData, setFavouritesData, toggleFavourite } = useContext(FavouritesContext);
 
   const loadFavourites = async () => {
     try {
@@ -44,8 +44,9 @@ export function Favourites() {
   useEffect (() => {
     loadFavourites(FAV_URL)
     console.log('effect fav LIST poke', favouritesData)
+    // addData(FAV_URL, {...newFavPokemon});
     // const favToAdd = {favouritesData}
-    // console.log('favito-add', favToAdd)
+
     // tu zrobiła mi się pętla i zapiywało się do jsona mnówstwo danych
     //addData(FAV_URL, favouritesData)
   }, [])
@@ -87,7 +88,7 @@ export function Favourites() {
   return (
     <>
       <h2><strong>Moje ulubione pokemony</strong></h2>
-      <FavouritesList handleClick={handleDeleteFavourite} handleFavourite={handleFavouriteClick2} />
+      <FavouritesList handleRemove={handleDeleteFavourite} handleFavourite={toggleFavourite} />
 
     </>
   );

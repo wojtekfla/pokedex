@@ -3,15 +3,9 @@ import { PokeDataContext } from "../../../context/PokeDataContext";
 import { PokemonCard } from "./PokemonCard";
 import { useContext, useEffect } from "react";
 
-export function PokemonsList( {handleFavClick} ) {
+export function PokemonsList( {handleFavClick, handleRemove, handleArena} ) {
   const { pokemonsData, setPokemonsData, toggleFavourite, handleDataFromJson } = useContext(PokeDataContext)
   const { favouritesData, setFavouritesData } = useContext(FavouritesContext)
-
-  // function handleFavouriteClick (newFavouritePokemon) {
-  //   console.log('fav poke handled', newFavouritePokemon)
-  // }
-
-
 
   return (
     <>
@@ -22,8 +16,8 @@ export function PokemonsList( {handleFavClick} ) {
                 pokemon={pokemon}
                 key={pokemon.id}
                 handleFavouriteClick={handleFavClick}
-                props={{ pokemonsData, setFavouritesData }}
-                // toggleArena2={toggleArena2}
+                handleRemove={handleRemove}
+                handleArena={handleArena}
               />
             );
           })}

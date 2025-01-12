@@ -13,10 +13,10 @@ export function Home() {
     pokemonsData,
     setPokemonsData,
     handleDataFromJson,
-    toggleFavourite,
+    // toggleFavourite,
     toggleArena,
   } = useContext(PokeDataContext);
-  const { favouritesData, setFavouritesData } = useContext(FavouritesContext);
+  const { favouritesData, setFavouritesData, toggleFavourite } = useContext(FavouritesContext);
 
   const loadFavourites = async () => {
     try {
@@ -43,14 +43,34 @@ export function Home() {
     }
   };
 
-  function handleFavouriteClick(newFavouritePokemon) {
-    console.log("home handFavClick", newFavouritePokemon);
-    setFavouritesData((prev) => ({ ...prev, newFavouritePokemon }));
-    toggleFavourite(newFavouritePokemon.id);
-    addData(FAV_URL, { ...newFavouritePokemon, isFavourite: true });
+  function handleFavouriteClick(newFavPokemon) {
+    toggleFavourite(newFavPokemon.id);
+    // setFavouritesData((prev) => ({ ...prev, newFavPokemon: !newFavPokemon.isFavourite }));
+    // console.log('favData', favouritesData)
+    addData(FAV_URL, { ...newFavPokemon, isFavourite: true });
+    
+    // addData(FAV_URL, {...newFavPokemon});
   }
 
-  function toggleArena2(pokemonToArena) {
+  function handleDeleteFavourite(id) {
+    fetch(`${FAV_URL}/${id}`, {
+      method: "DELETE"
+    })
+    .then((res) => {
+      if(res.ok) {
+        setFavouritesData((prev) => 
+          prev.filter((item) => item.id !== id))
+        toggleFavourite(id)
+      } else {
+        throw new Error ('Błąd podczas usuwania')
+      }
+    })
+    .catch((e)=> {
+      alert(e.message)
+    })
+  }
+
+  function handleArenaClick(pokemonToArena) {
     console.log("home toggle to arena", pokemonToArena);
     const pokeId = pokemonToArena.id;
     console.log("pokeId", pokeId);
@@ -61,14 +81,15 @@ export function Home() {
     console.log("home eff pokeData", pokemonsData);
     console.log("home eff favData", favouritesData);
     handleDataFromJson(favouritesData)
+    const newFavData = pokemonsData.filter((item) => item.isFavourite === true)
+    setFavouritesData(newFavData)
+    //addData(FAV_URL, {...newFavPokemon});
   }, []);
-
-  console.log('Home render')
 
   return (
     <>
       <SearchPokemons />
-      <PokemonsList handleFavClick={handleFavouriteClick} />
+      <PokemonsList handleFavClick={handleFavouriteClick} handleRemove={handleDeleteFavourite} handleArena={handleArenaClick} />
     </>
   );
 }

@@ -13,7 +13,6 @@ export function Home() {
     pokemonsData,
     setPokemonsData,
     handleDataFromJson,
-    // toggleFavourite,
     toggleArena,
   } = useContext(PokeDataContext);
   const { favouritesData, setFavouritesData, toggleFavourite } = useContext(FavouritesContext);

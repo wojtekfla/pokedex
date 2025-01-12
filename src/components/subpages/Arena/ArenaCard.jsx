@@ -25,7 +25,7 @@ export function ArenaCard({pokemon}) {
                       <IoIosHeartEmpty className="size-6 min-h-8" />
                     </button>
                   )}
-                  <button>
+                  <button className="my-auto">
                     <LuSword className="size-6 min-h-8" />
                   </button>
                 </div>

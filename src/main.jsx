@@ -42,7 +42,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    ,
     <LoginProvider>
       <PokeDataProvider>
         <FavouritesProvider>

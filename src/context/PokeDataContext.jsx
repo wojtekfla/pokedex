@@ -5,14 +5,6 @@ export const PokeDataContext = createContext([])
 export const PokeDataProvider = ({ children }) => {
   const [pokemonsData, setPokemonsData] = useState([])
 
-  // const toggleFavourite = (id) => {
-  //   const newData = pokemonsData.map((item) => {
-  //     return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
-  //   })
-  //   console.log('DATA in context', newData)
-  //   setPokemonsData(newData)
-  // }
-
   const toggleArena = (id) => {
     const newData = pokemonsData.map((item) => {
       return Number(item.id) === Number(id) ? {...item, isArena: !item.isArena}  : {...item}
@@ -34,14 +26,28 @@ export const PokeDataProvider = ({ children }) => {
     setPokemonsData(newData)
   }
 
+  const updatePokemon = (pokemon) => {
+    const newData = pokemonsData.map((item) => {
+      if(item.id === pokemon.id) {
+        return pokemon
+      }
+      return item
+    })
+    setPokemonsData(newData)
+  }
+
   return (
-    <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData,  handleDataFromJson, toggleArena }}>
+    <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData,  handleDataFromJson, toggleArena, updatePokemon }}>
       {children}
     </PokeDataContext.Provider>
   )
 }
 
 
-{/* <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData, toggleFavourite, handleDataFromJson, toggleArena }}>
-{children}
-</PokeDataContext.Provider> */}
+  // const toggleFavourite = (id) => {
+  //   const newData = pokemonsData.map((item) => {
+  //     return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
+  //   })
+  //   console.log('DATA in context', newData)
+  //   setPokemonsData(newData)
+  // }

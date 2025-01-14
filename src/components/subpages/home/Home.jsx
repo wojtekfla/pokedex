@@ -5,28 +5,30 @@ import { FavouritesContext } from "../../../context/FavouritesContext";
 import { SearchPokemons } from "./SearchPokemons";
 import { PokemonsList } from "./PokemonsList";
 import { PokemonCard } from "./PokemonCard";
+import { loadFromJson } from "../../../utils/loadFromJson";
 
+const BASE_URL = "http://localhost:3000";
 const FAV_URL = "http://localhost:3000/favourites";
 
 export function Home() {
-  const {
-    pokemonsData,
-    setPokemonsData,
-    handleDataFromJson,
-    toggleArena,
-  } = useContext(PokeDataContext);
-  const { favouritesData, setFavouritesData, toggleFavourite } = useContext(FavouritesContext);
+  const { pokemonsData, setPokemonsData, handleDataFromJson, toggleArena } =
+    useContext(PokeDataContext);
+  const { favouritesData, setFavouritesData, toggleFavourite } =
+    useContext(FavouritesContext);
 
   const loadFavourites = async () => {
     try {
-      const res = await fetch(FAV_URL)
-      const json = await res.json()
-      console.log("json", json)
-      setFavouritesData(json)
-      } catch (e) {
-        console.error('Error', e)
+      const response = await fetch(FAV_URL);
+      if (!response.ok) {
+        throw new Error("An error occurred ...");
+      }
+      const json = await response.json();
+      console.log("json", json);
+      setFavouritesData(json);
+    } catch (e) {
+      console.error("Error", e);
     }
-  }
+  };
 
   const addData = async (url, bodyData) => {
     try {
@@ -37,6 +39,9 @@ export function Home() {
           "Content-Type": "application/json",
         },
       });
+      if (!response.ok) {
+        throw new Error("An error occurred ...");
+      }
     } catch (e) {
       console.error("Error", e);
     }
@@ -47,26 +52,25 @@ export function Home() {
     // setFavouritesData((prev) => ({ ...prev, newFavPokemon: !newFavPokemon.isFavourite }));
     // console.log('favData', favouritesData)
     addData(FAV_URL, { ...newFavPokemon, isFavourite: true });
-    
+
     // addData(FAV_URL, {...newFavPokemon});
   }
 
   function handleDeleteFavourite(id) {
     fetch(`${FAV_URL}/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
     })
-    .then((res) => {
-      if(res.ok) {
-        setFavouritesData((prev) => 
-          prev.filter((item) => item.id !== id))
-        toggleFavourite(id)
-      } else {
-        throw new Error ('Błąd podczas usuwania')
-      }
-    })
-    .catch((e)=> {
-      alert(e.message)
-    })
+      .then((res) => {
+        if (res.ok) {
+          setFavouritesData((prev) => prev.filter((item) => item.id !== id));
+          toggleFavourite(id);
+        } else {
+          throw new Error("Błąd podczas usuwania");
+        }
+      })
+      .catch((e) => {
+        alert(e.message);
+      });
   }
 
   function handleArenaClick(pokemonToArena) {
@@ -75,21 +79,36 @@ export function Home() {
     console.log("pokeId", pokeId);
     toggleArena(pokeId);
   }
+  // let data;
+
+  // async function loadPokemonsFromJson(url, data) {
+  //   return (data = loadFromJson(url));
+  // }
+
+  async function printData() {
+    const arenaToPrint = await loadFromJson(`${BASE_URL}/pokemons`);
+    console.log(arenaToPrint);
+  }
 
   useEffect(() => {
-    console.log("home eff pokeData", pokemonsData);
-    console.log("home eff favData", favouritesData);
-    handleDataFromJson(favouritesData)
-    const newFavData = pokemonsData.filter((item) => item.isFavourite === true)
-    setFavouritesData(newFavData)
-    //addData(FAV_URL, {...newFavPokemon});
+    handleDataFromJson(favouritesData);
+    const newFavData = pokemonsData.filter((item) => item.isFavourite === true);
+    setFavouritesData(newFavData);
+
+    printData();
+
+    //pokemonsInArena = loadFromJson(`${BASE_URL}/pokemons`)
+    // const updatePokemons = loadFromJson(`${BASE_URL}/pokemons`);
   }, []);
 
   return (
     <>
       <SearchPokemons />
-      <PokemonsList handleFavClick={handleFavouriteClick} handleRemove={handleDeleteFavourite} handleArena={handleArenaClick} />
+      <PokemonsList
+        handleFavClick={handleFavouriteClick}
+        handleRemove={handleDeleteFavourite}
+        handleArena={handleArenaClick}
+      />
     </>
   );
 }
-

@@ -1,4 +1,3 @@
-// import { NavLink } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../../shared/Button";
 import { LuSwords } from "react-icons/lu";
@@ -6,14 +5,18 @@ import { PokeDataContext } from "../../../context/PokeDataContext";
 import { PokemonCard } from "../Home/PokemonCard";
 import { saveToJson } from "../../../utils/saveToJson"; 
 import { useNavigate } from "react-router-dom";
+import { loadFromJson } from "../../../utils/loadFromJson";
 
 const POKE_URL = "http://localhost:3000/pokemons"
 
 export function Arena() {
-  const [pokemonsInArena, setPokemonsInArena] = useState([]);
-  const { pokemonsData, toggleArena } = useContext(PokeDataContext);
-
+  // const [pokemonsInArena, setPokemonsInArena] = useState([]);
+  const { pokemonsData, setPokemonsData, updatePokemon, handleDataFromJson } = useContext(PokeDataContext);
   const navigate = useNavigate()
+
+  let pokemonsInArena = pokemonsData.filter(
+    (item) => item.isArena === true,
+  );
 
   const handleClick = () => {
     // const pokemonsInArena = pokemonsData.filter(
@@ -22,15 +25,42 @@ export function Arena() {
     console.log("poke in arena", pokemonsInArena);
   };
 
-  const clearArena = () => {
-    setPokemonsInArena([])
+  const clearArena = async () => {
+    let updatedArenaPokemons
+    try {
+      updatedArenaPokemons = await loadFromJson(POKE_URL)
+      setPokemonsInArena(updatedArenaPokemons)
+      // const newData = 
+    } catch (error) {
+      console.error(error.message)
+    }
+   
+    console.log('upd arena from json', updatedArenaPokemons)
+  
+    // const element = data.find((itemFromJson) => itemFromJson.id === item.id)
+    // if (element) {
+        
+    //   return {...item, ...element}
+    // } else {
+    //   return {...item}
+    // }  
+
+    // return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
+
+    // setPokemonsData(() => {   
+    // })
+      
     console.log('Cleared !!!')  
-    navigate("/")
+    
   }
 
   const handleFightClick = () => {
-    let pokemonOne = pokemonsInArena[0]
-    let pokemonTwo = pokemonsInArena[1]
+    let [pokemonOne, pokemonTwo] = pokemonsData.filter(
+      (item) => item.isArena === true,
+    );
+
+    // let pokemonOne = pokemonsInArena[0]
+    // let pokemonTwo = pokemonsInArena[1]
     let winner = ""
 
     const pokemonOnePower = pokemonOne.base_exp * pokemonOne.weight
@@ -49,29 +79,37 @@ export function Arena() {
       console.log('pok1', pokemonOne)
       console.log('pok2', pokemonTwo) 
     } else {
-      pokemonTwo = {...pokemonTwo, win: pokemonOne.win +1, base_exp: Number(pokemonTwo.base_exp + 10)}
-      pokemonOne = {...pokemonOne, loss: pokemonTwo.loss +1}
+      pokemonTwo = {...pokemonTwo, win: pokemonTwo.win +1, base_exp: Number(pokemonTwo.base_exp + 10)}
+      pokemonOne = {...pokemonOne, loss: pokemonOne.loss +1}
       console.log('pok1', pokemonOne)
       console.log('pok2', pokemonTwo) 
     }
 
-    saveToJson(POKE_URL, {...pokemonOne, isArena: false})
-    saveToJson(POKE_URL, {...pokemonTwo, isArena: false})
+    const newPokemonOne =  {...pokemonOne, isArena: false}
+    saveData(POKE_URL, newPokemonOne)
+    const newPokemonTwo =  {...pokemonTwo, isArena: false}
+    saveData(POKE_URL, newPokemonTwo)
 
-    setTimeout(() => clearArena(), 3*1000);
+    setTimeout(() => { 
+      handleDataFromJson([newPokemonOne, newPokemonTwo])
+      pokemonsInArena = null
+      // updatePokemon(newPokemonOne)
+      // updatePokemon(newPokemonTwo)
+      navigate("/")
+    }
+    , 2*1000);
   }
 
+  async function saveData (url, data) {
+    await saveToJson(url, data)
+  }
 
-  useEffect(() => {
-    const pokemonsToArena = pokemonsData.filter(
-      (item) => item.isArena === true,
-    );
-    setPokemonsInArena(pokemonsToArena);
-    // pokemon1 = pokemonsInArena[0]
-    // pokemon2 = pokemonsInArena[1]
-    // console.log('pok1', pokemon1)
-    // console.log('pok2', pokemon2)
-  }, []);
+  // useEffect(() => {
+  //   const pokemonsToArena = pokemonsData.filter(
+  //     (item) => item.isArena === true,
+  //   );
+  //   setPokemonsInArena(pokemonsToArena);
+  // }, []);
 
   return (
     <>
@@ -114,3 +152,4 @@ export function Arena() {
     </>
   );
 }
+

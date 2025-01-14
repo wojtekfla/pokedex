@@ -1,12 +1,19 @@
-import { NavLink } from "react-router-dom";
 import { Button } from "../../shared/Button";
+import { RankingTable } from "./RankingTable";
 
-export function Ranking({ className }) {
+export function Ranking() {
+  const data = 'pokemonsArray'
+  const sortMethod = 'sortMethod'
+
+  
+
   return (
     <>
-      <Button className="rounded bg-sky-500 px-3 py-1 text-white">
-        Ranking
-      </Button>
+      <div>
+        <div>
+          <RankingTable data={data} sortMethod={sortMethod} />
+        </div>
+      </div>
     </>
   );
 }

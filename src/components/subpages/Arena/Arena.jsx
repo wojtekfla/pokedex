@@ -59,10 +59,6 @@ export function Arena() {
       (item) => item.isArena === true,
     );
 
-    // let pokemonOne = pokemonsInArena[0]
-    // let pokemonTwo = pokemonsInArena[1]
-    let winner = ""
-
     const pokemonOnePower = pokemonOne.base_exp * pokemonOne.weight
     const pokemonTwoPower = pokemonTwo.base_exp * pokemonTwo.weight
 

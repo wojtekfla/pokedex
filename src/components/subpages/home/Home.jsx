@@ -85,9 +85,11 @@ export function Home() {
   //   return (data = loadFromJson(url));
   // }
 
-  async function printData() {
-    const arenaToPrint = await loadFromJson(`${BASE_URL}/pokemons`);
-    console.log(arenaToPrint);
+  async function loadPokemonsFromJson() {
+    const pokemonsFromJson = await loadFromJson(`${BASE_URL}/pokemons`);
+    console.log('z json-a',pokemonsFromJson);
+    await handleDataFromJson(pokemonsFromJson)
+    //poprawić nazwy w odniesieniu do areny
   }
 
   useEffect(() => {
@@ -95,10 +97,8 @@ export function Home() {
     const newFavData = pokemonsData.filter((item) => item.isFavourite === true);
     setFavouritesData(newFavData);
 
-    printData();
+    loadPokemonsFromJson()
 
-    //pokemonsInArena = loadFromJson(`${BASE_URL}/pokemons`)
-    // const updatePokemons = loadFromJson(`${BASE_URL}/pokemons`);
   }, []);
 
   return (

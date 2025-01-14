@@ -1,18 +1,15 @@
+import { useContext } from "react";
 import { Button } from "../../shared/Button";
 import { RankingTable } from "./RankingTable";
+import { PokeDataContext } from "../../../context/PokeDataContext";
 
 export function Ranking() {
-  const data = 'pokemonsArray'
-  const sortMethod = 'sortMethod'
-
-  
+  const { pokemonsData } = useContext(PokeDataContext);
 
   return (
     <>
       <div>
-        <div>
-          <RankingTable data={data} sortMethod={sortMethod} />
-        </div>
+        <RankingTable data={pokemonsData} />
       </div>
     </>
   );

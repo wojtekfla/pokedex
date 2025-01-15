@@ -13,8 +13,6 @@ export const FavouritesProvider = ({ children }) => {
     })
     console.log('DATA in context', newData)
     setPokemonsData(newData)
-    // const newFavData = newData.filter((item) => item.isFavourite === true)
-    // console.log('newFavData', newFavData)
   }
 
   return (

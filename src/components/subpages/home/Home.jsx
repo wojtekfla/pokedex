@@ -79,11 +79,6 @@ export function Home() {
     console.log("pokeId", pokeId);
     toggleArena(pokeId);
   }
-  // let data;
-
-  // async function loadPokemonsFromJson(url, data) {
-  //   return (data = loadFromJson(url));
-  // }
 
   async function loadPokemonsFromJson() {
     const pokemonsFromJson = await loadFromJson(`${BASE_URL}/pokemons`);

@@ -12,7 +12,7 @@ const BASE_URL = "https://pokeapi.co/api/v2";
 export function App() {
   const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
   const { data, error, isLoading } = useFetchPokemons(
-    `${BASE_URL}/pokemon?limit=30`,
+    `${BASE_URL}/pokemon?limit=50`,
   );
 
   // const [favoritePokemons, setFavoritePokemons] = useState([])

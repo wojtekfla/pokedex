@@ -1,4 +1,6 @@
 export async function saveToJson(url, bodyData) {
+  console.log('SAVING to JSON')
+
   try {
     await fetch(`${url}/${bodyData.id}`, {
       method: "DELETE",
@@ -14,10 +16,10 @@ export async function saveToJson(url, bodyData) {
       },
     });
     if (!response.ok) {
-      throw new Error("An error occurred while saving data", bodyData);
+      throw new Error("An error occurred while saving to json data", bodyData);
     }
   } catch (error) {
-    console.error("Error", error.message);
+    console.error("Error in saving to json", error.message);
     alert(error.message);
   }
 }

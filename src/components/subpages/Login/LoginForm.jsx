@@ -1,15 +1,19 @@
-import { useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { LoginContext } from "../../../context/LoginContext";
+import { useNavigate } from "react-router-dom";
 
-const USERS_URL = "http://localhost:3000/users";
+import { USERS_URL } from "../../../utils/constants";
+import { LoginContext } from "../../../context/LoginContext";
+import { useSnackbar } from "notistack";
 
 export function LoginForm() {
-  const [usersData, setUsersData] = useState(null);
-  const [password, setPasword] = useState(null);
-  const { loggedUser, setLoggedUser } = useContext(LoginContext);
+  const [loading, setLoading] = useState(false);
+  const { setIsLoggedIn, setLoggedUser } = useContext(LoginContext);
+
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const loginSchema = z.object({
     userName: z.string().min(1, { message: "User name is required!" }),
@@ -19,17 +23,55 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
-  // useEffect(() => {
-  //   fetch(`${USERS_URL}/?userName=${}`)
-  //     .then((response) => response.json())
-  //     .then((data) => setUsersData(data))
-  //     .then(() => console.log("efekt", usersData));
-  // }, []);
+  async function onSubmit(data) {
+    console.log("submited data", data);
+
+    try {
+      setLoading(true);
+      // const response = await fetch(
+      //   `${USERS_URL}/?userName=${encodeURIComponent(data.userName)}&password=${encodeURIComponent(data.password)}`
+      // );
+      const response = await fetch(
+        `${USERS_URL}/?userName=${data.userName}&password=${data.password}`,
+      );
+      const users = await response.json();
+      console.log("users", users);
+
+      if (users.length === 1) {
+        const user = users[0];
+        console.log("user in login", user);
+        enqueueSnackbar("Successfuly logged in", { variant: "info" });
+        setIsLoggedIn(true);
+        setLoggedUser(user);
+        localStorage.setItem('isLoggedIn', 'true')
+        localStorage.setItem('loggedUser', JSON.stringify(user))
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } else if (users.length > 1) {
+        enqueueSnackbar("System error: multiple users found.", { variant: "error" });
+        console.error("Multiple users found with the same credentials:", users);
+        reset(); 
+      } else {
+        enqueueSnackbar("Invalid username or password", { variant: "error" });
+        reset();
+      }
+    } catch (error) {
+      console.error("Login error", error);
+      enqueueSnackbar("Something went wrong during login", {
+        variant: "error",
+      });
+      reset()
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const checkUserStatus = (data) => {
     const usersJson = getUsersData();
@@ -38,17 +80,6 @@ export function LoginForm() {
       console.log(usersFromJson);
     }
   };
-
-  //   const newData = pokemonsData.map((item) => {
-  //     const element = data.find((itemFromJson) => itemFromJson.id === item.id)
-  //     if (element) {
-  //       return {...item, ...element}
-  //     } else {
-  //       return {...item}
-  //     }
-  //   })
-  //   setPokemonsData(newData)
-  // }
 
   async function getUsersData() {
     const url = "http://localhost:3000/users";
@@ -65,24 +96,6 @@ export function LoginForm() {
     }
   }
 
-  const onSubmit = (data) => {
-    console.log("submited data", data);
-
-    fetch(
-      `${USERS_URL}/?userName=${encodeURIComponent(data.userName)}&password=${encodeURIComponent(data.password)}`,
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.length === 1) {
-          setLoggedUser(data[0]);
-        } else {
-          alert('nie ma uzytkownika')
-        }
-      });
-    // .then(() => console.log("efekt", usersData));
-  };
-
   const onSubmit2 = (data) => {
     console.log("submited data", data);
     const nameToCheck = data.userName;
@@ -94,56 +107,91 @@ export function LoginForm() {
     console.log(isUser);
   };
 
-  // const jsonData = getUsersData();
-  // setUsersData(jsonData);
-  // console.log(usersData)
-  // const nameToCheck = data.userName
-  // console.log('user name', nameToCheck)
-  // const isUser = usersData.find((item) => item.userName === nameToCheck);
-  // console.log("isUser", isUser);
-  // if (isUser) {
-  //   alert (`W bazie dnych jest juz uzytkownik o imieniu ${data.userName}`)
-  // }
-  // console.log("usersData", usersData);
-
   return (
-    <>
-      <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <div>
-              <label htmlFor="userName">Name </label>
-            </div>
-            <input
-              {...register("userName")}
-              id="userName"
-              type="text"
-              className="border-2 border-l-neutral-300"
-            />
-            {errors.userName && (
-              <p className="text-red-500">{errors.userName.message}</p>
-            )}
-          </div>
-          <div>
-            <div>
-              <label htmlFor="password">password </label>
-            </div>
-            <input
-              {...register("password")}
-              id="password"
-              type="password"
-              value="Qwerty123!"
-              className="border-2 border-l-neutral-300"
-            />
-            {errors.password && (
-              <p className="text-red-500">{errors.password.message}</p>
-            )}
-          </div>
-          <button className="mt-2 rounded bg-sky-500 px-3 py-1 text-white">
-            Sign in
-          </button>
-        </form>
-      </div>
-    </>
+    <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center dark:bg-gray-800 dark:text-white">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full flex-col items-center gap-4"
+      >
+        <div className="flex w-3/4 flex-col text-left">
+          <label htmlFor="userName" className="mb-1 font-medium">
+            Username
+          </label>
+          <input
+            {...register("userName")}
+            id="userName"
+            type="text"
+            className="w-full rounded border-2 border-gray-300 px-2 py-1 dark:border-gray-600 dark:bg-gray-700"
+          />
+          {errors.userName && (
+            <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+              {errors.userName.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex w-3/4 flex-col text-left">
+          <label htmlFor="password" className="mb-1 font-medium">
+            Password
+          </label>
+          <input
+            {...register("password")}
+            id="password"
+            type="password"
+            className="w-full rounded border-2 border-gray-300 px-2 py-1 dark:border-gray-600 dark:bg-gray-700"
+          />
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting || loading}
+          className="mt-2 w-3/4 rounded bg-sky-500 px-3 py-2 text-white hover:bg-sky-400 disabled:bg-sky-300 dark:bg-sky-700 dark:hover:bg-sky-600"
+        >
+          {loading ? "Logging in..." : "Sign in"}
+        </button>
+      </form>
+    </div>
   );
 }
+
+// <>
+//       <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center dark:bg-gray-800 dark:text-slate-300">
+//         <form onSubmit={handleSubmit(onSubmit)}>
+//           <div>
+//             <label htmlFor="userName" className='flex justify-center w-4/5'>Name </label>
+//             <input
+//               {...register("userName")}
+//               id="userName"
+//               type="text"
+//               className="w-3/5 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+//             />
+//             {errors.userName && (
+//               <p className="text-red-500">{errors.userName.message}</p>
+//             )}
+//           </div>
+//           <div>
+//             <div>
+//               <label htmlFor="password">password </label>
+//             </div>
+//             <input
+//               {...register("password")}
+//               id="password"
+//               type="password"
+//               value="Qwerty123!"
+//               className="border-2 border-l-neutral-300"
+//             />
+//             {errors.password && (
+//               <p className="text-red-500">{errors.password.message}</p>
+//             )}
+//           </div>
+//           <button className="mt-2 rounded bg-sky-500 px-3 py-1 text-white">
+//             Sign in
+//           </button>
+//         </form>
+//       </div>
+//     </>

@@ -2,11 +2,12 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { IoHeart } from "react-icons/io5";
 import { LuSword } from "react-icons/lu";
 import { PokeCardWrapper } from "../../shared/PokemonCardWrapper";
+import { BASE_URL } from "../../../utils/constants"
 
 export function ArenaCard({pokemon}) {
-  const { name, img, height, weight, base_exp, ability, isFavourite } = pokemon;
-  const isPokemonFavourite = isFavourite;
+  const { name, img, height, weight, base_exp, ability, isFavourite, isInArena } = pokemon;
 
+  const isPokemonFavourite = isFavourite ? true : false
 
   return (
     <>

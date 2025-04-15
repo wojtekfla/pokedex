@@ -1,70 +1,76 @@
 import { useState, useEffect } from "react";
 
-export function useFetchPokemons(url) {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+import { API_URL, JSON_SERVER_URL } from "../utils/constants";
 
-  function filterPokemonsData(pokemonsArray) {
-    let array = [];
-    pokemonsArray.map(
-      ({
-        id,
-        name,
-        height,
-        weight,
-        base_experience,
-        abilities: ability,
-        sprites,
-      }) =>
-        array.push({
-          id: id,
-          name: name,
-          height: height,
-          weight: weight,
-          base_exp: base_experience,
-          img: sprites.other.dream_world.front_default,
-          ability: ability[0].ability.name,
-          isFavourite: false,
-          isArena: false,
-          win: 0,
-          loss: 0
-        }),
-    );
-    // console.log("array", array);
-    setData(array);
-  }
+export function useFetchPokemons() {
+  const [pokemons, setPokemons] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchPokemons() {
       setIsLoading(true);
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("failed to get response");
-        }
-        const data = await response.json();
-        if (data.results) {
-          const secondResponse = await data.results.map(async (el) => {
-            const res = await fetch(el.url);
-            return await res.json();
-          });
-          const data2 = await Promise.all(secondResponse);
-          filterPokemonsData(data2);
-        }
-      } catch (error) {
-        setError(error.message);
+        const apiResponse = await fetch(API_URL);
+        const apiData = await apiResponse.json();
+        const pokemonList = apiData.results;
+
+        const detailedPokemons = await Promise.all(
+          pokemonList.map(async (pokemon) => {
+            const response = await fetch(pokemon.url);
+            const data = await response.json();
+
+            return {
+              id: data.id,
+              name: data.name,
+              height: data.height,
+              weight: data.weight,
+              base_exp: data.base_experience,
+              img: data.sprites.other.dream_world.front_default,
+              ability: data.abilities[0]?.ability.name || 'unknown',
+              isFavourite: data.isFavourite || false,
+              isInArena: data.isInArena || false,
+              win: data.win || 0,
+              loss: data.win || 0,
+              edited: data.edited || false
+            };
+          }),
+        );
+
+        // ... dodaje funkcjonalność zależną od zalogowania, stąd zakomentowany kod ...
+        // console.log('Pokemony z API:', detailedPokemons)
+
+        // const jsonResponse = await fetch(JSON_SERVER_URL);
+        // const jsonPokemons = await jsonResponse.json();
+        // console.log("Pokemony z JSON Servera", jsonPokemons);
+
+        // const mergedPokemons = detailedPokemons.map((pokemon) => {
+        //   const foundPokemon = jsonPokemons.find((p) => p.id === pokemon.id);
+        //   return foundPokemon ? { ...pokemon, ...foundPokemon } : pokemon;
+        // });
+        // console.log("Merged Pokemons:", mergedPokemons);
+
+        // const newPokemons = jsonPokemons.filter(
+        //   (p) => !detailedPokemons.some((apiP) => apiP.id === p.id)
+        // )
+
+        // const finalPokemons = [...mergedPokemons, ...newPokemons]
+        // console.log('Finalna lista pokemonów', finalPokemons)
+
+        // setPokemons(finalPokemons)
+        setPokemons(detailedPokemons)
+
+      } catch (err) {
+        console.log('err in useFetch', err)
+        setError(err);
       } finally {
-        setIsLoading(false);       
+        setIsLoading(false);
       }
-    };
+    }
 
-    fetchData();
+    fetchPokemons();
+  }, []);
 
-    return () => {
-      setIsLoading(false);
-    };
-  }, [url]);
-
-  return { data, error, isLoading };
+  return { pokemons, setPokemons, error, isLoading };
 }
+

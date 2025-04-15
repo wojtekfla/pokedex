@@ -1,53 +1,219 @@
-import { createContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react";
+import { enqueueSnackbar } from "notistack";
+import { useFetchPokemons } from "../hooks/useFetchPokemons";
+import { LoginContext } from "../context/LoginContext";
+import { BASE_URL, JSON_SERVER_URL } from "../utils/constants";
 
-export const PokeDataContext = createContext([])
+export const PokeDataContext = createContext();
 
 export const PokeDataProvider = ({ children }) => {
-  const [pokemonsData, setPokemonsData] = useState([])
+  const {
+    pokemons,
+    setPokemons,
+    error,
+    isLoading,
+  } = useFetchPokemons();
+  const { isLoggedIn, loggedUser } = useContext(LoginContext);
+  const [pokemonsData, setPokemonsData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 30;
 
-  const toggleArena = (id) => {
-    const newData = pokemonsData.map((item) => {
-      return Number(item.id) === Number(id) ? {...item, isArena: !item.isArena}  : {...item}
-    })
-    console.log('DATA in context', newData)
-    setPokemonsData(newData)
-  }
+  // console.log("from pokedata loged User", loggedUser);
   
+
+  useEffect(() => {
+    const mergePokemons = async () => {
+      if (!isLoggedIn) {
+        setPokemonsData(pokemons); // pokemony tylko z API
+        return
+      }
+
+      try {
+        const jsonRes = await fetch (JSON_SERVER_URL)
+        const jsonPokemons = await jsonRes.json()
+
+        const merged = pokemons.map((pokemon) => {
+          const local = jsonPokemons.find((p) => p.id === pokemon.id)
+          return local ? { ...pokemon, ...local } : pokemon
+        })
+
+        const newLocalOnly = jsonPokemons.filter(
+          (local) => !pokemons.some((apiP) => apiP.id === local.id)
+        )
+
+        setPokemonsData([...merged, ...newLocalOnly])
+      } catch (err) {
+          console.error("Błąd przy pobieraniu z json-servera:", err);
+          setPokemonsData(pokemons); // fallback
+      }
+    }
+
+    mergePokemons()
+  }, [pokemons, isLoggedIn]);
+
+  useEffect(() => {
+    console.log('Pokemons in context', pokemonsData)
+  }, [pokemonsData]);
+
+  // pagination
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentPokemons = (pokemonsData ?? []).slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(pokemons.length / itemsPerPage);
+
+  function nextPage() {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  }
+  function prevPage() {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  }
+
+  // favourite
+  function toggleFavourite(id) {
+    if (!loggedUser) {
+      enqueueSnackbar("Zaloguj się aby dodawać do ulubionych", {
+        variant: "info",
+      });
+      return;
+    }
+
+    const selectedPokemon = pokemonsData.find((p) => p.id === id);
+    if (!selectedPokemon) return;
+
+    const updatedFavourite = !selectedPokemon.isFavourite;
+
+    setPokemonsData((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, isFavourite: updatedFavourite } : p,
+      ),
+    );
+  }
+
+  // arena
+  function toggleArena(id) {
+    const selectedPokemon = pokemonsData.find((p) => p.id === id);
+    console.log("selected pokemon", selectedPokemon);
+
+    if (selectedPokemon?.isInArena) {
+      setPokemonsData((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, isInArena: false } : p)),
+      );
+      return;
+    }
+
+    const pokemonsInArena = pokemonsData.filter((p) => p.isInArena);
+    console.log("pokemons in arena", pokemonsInArena);
+
+    if (pokemonsInArena.length >= 2) {
+      enqueueSnackbar("You can only add 2 Pokemons to the arena!", {
+        variant: "warning",
+      });
+      return;
+    }
+
+    setPokemonsData((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, isInArena: true } : p)),
+    );
+    // pamiętać o returnie przy zapisie z klamrami fn((a) => { return ... })
+  }
+
+  async function handleFavouriteClick(pokemon) {
+      const updatedPokemon = { ...pokemon, isFavourite: !pokemon.isFavourite };
+      console.log("handle fav click pokemon", updatedPokemon);
+  
+      try {
+        const response = await fetch(`${BASE_URL}/pokemons/${pokemon.id}`);
+  
+        if (response.ok) {
+          const data = await response.json();
+  
+          if (!updatedPokemon.isFavourite && !data.edited) {
+            // pokemon nie istniał w json-server jako edited lub po walce i został odklikniety
+            await fetch(`${BASE_URL}/pokemons/${pokemon.id}`, {
+              method: "DELETE",
+            });
+          } else {
+            // pokemon istnieje w json-server, aktualizujemu pole favourite
+            await fetch(`${BASE_URL}/pokemons/${pokemon.id}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ isFavourite: updatedPokemon.isFavourite }),
+            });
+          }
+        } else {
+          // pokemon nie istnieje, dodajemy nowy element do tablicy pokemonów
+          await fetch(`${BASE_URL}/pokemons`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedPokemon),
+          });
+        }
+  
+        toggleFavourite(pokemon.id);
+        
+      } catch (error) {
+        console.error("Błąd przy zapisie favourite do JSON-a", error);
+      }
+    }
+
+  // obsługa po walce w arenie, zmienić nazwę
   const handleDataFromJson = (data) => {
     const newData = pokemonsData.map((item) => {
-      const element = data.find((itemFromJson) => itemFromJson.id === item.id)
+      const element = data.find((itemFromJson) => itemFromJson.id === item.id);
       if (element) {
-        // console.log('pokeContext element', element)
-        return {...item, ...element}
+        console.log("Handle data from JSON", element);
+        return { ...item, ...element };
       } else {
-        return {...item}
+        return { ...item };
       }
-    })
-    setPokemonsData(newData)
-  }
+    });
+    setPokemonsData(newData);
+  };
 
   const updatePokemon = (pokemon) => {
     const newData = pokemonsData.map((item) => {
-      if(item.id === pokemon.id) {
-        return pokemon
+      if (item.id === pokemon.id) {
+        return pokemon;
       }
-      return item
-    })
-    setPokemonsData(newData)
-  }
+      return item;
+    });
+    setPokemonsData(newData);
+  };
 
   return (
-    <PokeDataContext.Provider value={{ pokemonsData, setPokemonsData,  handleDataFromJson, toggleArena, updatePokemon }}>
+    <PokeDataContext.Provider
+      value={{
+        pokemons,
+        setPokemons,
+        error,
+        isLoading,
+        toggleFavourite,
+        toggleArena,
+        pokemonsData,
+        handleDataFromJson,
+        currentPokemons,
+        currentPage,
+        totalPages,
+        nextPage,
+        prevPage,
+        handleFavouriteClick
+      }}
+    >
       {children}
     </PokeDataContext.Provider>
-  )
-}
+  );
+};
 
+export const usePokeData = () => {
+  return useContext(PokeDataContext);
+};
 
-  // const toggleFavourite = (id) => {
-  //   const newData = pokemonsData.map((item) => {
-  //     return Number(item.id) === Number(id) ? {...item, isFavourite: !item.isFavourite}  : {...item}
-  //   })
-  //   console.log('DATA in context', newData)
-  //   setPokemonsData(newData)
-  // }
+// function toggleArena2(id) {
+//   setPokemonsData((prev) =>
+//     prev.map((p) => (p.id === id ? { ...p, isInArena: !p.isInArena } : p)),
+//   );
+// }

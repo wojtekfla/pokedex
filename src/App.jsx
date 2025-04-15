@@ -1,29 +1,31 @@
 import "./App.css";
-import { useContext, useEffect, useState } from "react";
-import { useFetchPokemons } from "./hooks/useFetchPokemons.js";
-// import { PokemonsContext } from "./context/PokemonsContext.js"
 
-import { Layout } from "./components/Layout/Layout.jsx";
 import { Outlet } from "react-router-dom";
-import { PokeDataContext } from "./context/PokeDataContext.jsx";
+import { useContext } from "react";
 
-const BASE_URL = "https://pokeapi.co/api/v2";
+import { usePokeData } from "./context/PokeDataContext.jsx";
+import { MainLayout } from "./components/Layout/MainLayout.jsx";
+import { LoadingScreen } from "./components/shared/LoadingScreen.jsx";
+import { ErrorScreen } from "./components/shared/ErrorScreen.jsx";
+import { ThemeContext } from "./context/ThemeContext.jsx";
 
 export function App() {
-  const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
-  const { data, error, isLoading } = useFetchPokemons(
-    `${BASE_URL}/pokemon?limit=50`,
-  );
+  // const { darkMode, toggleDarkMode, clearDarkMode } = useContext(ThemeContext)
+  const { error, isLoading } = usePokeData();
 
-  // const [favoritePokemons, setFavoritePokemons] = useState([])
 
-  useEffect(() => {
-    setPokemonsData(data);
-  }, [data]);
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    console.log("error", error);
+    return <ErrorScreen message={error.message} />;
+  }
 
   return (
     <>
-      <Layout />
+      <MainLayout />
       <Outlet />
     </>
   );

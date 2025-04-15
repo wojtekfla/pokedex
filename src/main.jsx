@@ -1,5 +1,6 @@
-import { StrictMode } from "react";
 import "./index.css";
+
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { App } from "./App.jsx";
@@ -14,9 +15,11 @@ import {
   LoginForm,
 } from "./components/index.js";
 
-import { PokeDataProvider } from "./context/PokeDataContext.jsx";
-import { FavouritesProvider } from "./context/FavouritesContext.jsx";
 import { LoginProvider } from "./context/LoginContext.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { PokeDataProvider } from "./context/PokeDataContext.jsx";
+
+import { SnackbarProvider } from "notistack";
 
 const router = createBrowserRouter([
   {
@@ -43,11 +46,19 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <LoginProvider>
-      <PokeDataProvider>
-        <FavouritesProvider>
-          <RouterProvider router={router} />
-        </FavouritesProvider>
-      </PokeDataProvider>
+      <ThemeProvider>
+        <PokeDataProvider>
+          <SnackbarProvider
+            maxSnack={4}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            <RouterProvider router={router} />
+          </SnackbarProvider>
+        </PokeDataProvider>
+      </ThemeProvider>
     </LoginProvider>
   </StrictMode>,
 );

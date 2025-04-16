@@ -49,7 +49,7 @@ createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <PokeDataProvider>
           <SnackbarProvider
-            maxSnack={4}
+            maxSnack={3}
             anchorOrigin={{
               vertical: "top",
               horizontal: "center",

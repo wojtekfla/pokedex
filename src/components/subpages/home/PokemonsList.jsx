@@ -5,11 +5,7 @@ import { Modal } from "../../shared/Modal";
 import { PokemonCard } from "./PokemonCard";
 import { PokemonDetails } from "./PokemonDetails";
 
-export function PokemonsList({
-  handleFavClick,
-  handleDeleteFavClick,
-  handleArena,
-}) {
+export function PokemonsList() {
   const {
     toggleArena,
     handleFavouriteClick,

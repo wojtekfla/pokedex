@@ -1,12 +1,93 @@
-import { Button } from "../../shared/Button";
+import { useContext } from "react";
+import { LoginContext } from "../../../context/LoginContext";
+import { PokeDataContext } from "../../../context/PokeDataContext";
 
-export function Edit ({ className }) {
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../shared/Button";
+import { PokemonCard } from "../Home/PokemonCard";
+
+export function Edit() {
+  const { isLoggedIn } = useContext(LoginContext);
+  const { pokemonsData } = useContext(PokeDataContext);
+  const navigate = useNavigate();
+
+  console.log("islogged in edit", isLoggedIn);
+
+  function handleCreateNewPokemonClick() {
+    navigate("/edit/new");
+  }
+
+  function handleEditPokemonClick() {
+    navigate(`/edit/${pokemonId}`);
+  }
+
+  const visiblePokemons = isLoggedIn
+    ? pokemonsData
+    : pokemonsData.filter((p) => !p.isCustom && !p.edited);
+
+  console.log("visible pokemons", visiblePokemons);
 
   return (
     <>
-      <Button className="bg-sky-500 text-white px-3 py-1 rounded">
-        Edit
-      </Button>
+      <div className="mx-auto max-w-5xl px-4 py-8">
+        <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-300">
+          Edycja Pokemonów
+        </h1>
+
+        {isLoggedIn && (
+          <div className="mb-6 text-center">
+            <button
+              onClick={handleCreateNewPokemonClick}
+              className="rounded bg-blue-600 px-4 py-2 text-gray-100 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              Stwórz nowego Pokemona
+            </button>
+          </div>
+        )}
+
+        <div className="overflow-x-auto rounded shadow-md">
+          <table className="min-w-full border dark:border-gray-600">
+            <tbody>
+              {visiblePokemons.map((pokemon, index) => (
+                <tr
+                  key={pokemon.id}
+                  className={`${
+                    index % 2 === 0
+                      ? "bg-slate-300 dark:bg-gray-800"
+                      : "bg-slate-400 dark:bg-gray-700"
+                  } hover:bg-slate-100 dark:hover:bg-gray-600`}
+                >
+                  <td className="border px-4 py-2 text-center text-gray-900 dark:border-gray-700 dark:text-gray-100">
+                    {index + 1}
+                  </td>
+                  <td className="border px-4 py-2 text-center dark:border-gray-700">
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
+                      alt={pokemon.name}
+                      className="mx-auto h-16 aspect-square hover:scale-150 transition-transform duration-200 z-10"
+                    />
+                  </td>
+                  <td className="border px-4 py-2 text-gray-900 dark:border-gray-700 dark:text-gray-100">
+                    {pokemon.name}
+                  </td>
+                  {isLoggedIn && (
+                    <td className="border px-4 py-2 text-center dark:border-gray-700">
+                      <button
+                        onClick={() => handleEditPokemonClick(pokemon.id)}
+                        className="rounded bg-sky-500 hover:bg-sky-600 px-4 py-1 text-slate-100 dark:bg-blue-500 dark:hover:bg-blue-600"
+                      >
+                        Edytuj
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
-  )
+  );
 }
+
+

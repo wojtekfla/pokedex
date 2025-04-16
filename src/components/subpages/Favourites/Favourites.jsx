@@ -1,13 +1,12 @@
 import { useContext, useState, useEffect } from "react";
 import { PokeDataContext } from "../../../context/PokeDataContext";
-import { BASE_URL } from "../../../utils/constants";
-import { removeFavourite } from "../../../utils/removeFavourite";
-import { PokemonCard } from "../Home/PokemonCard";
 import { LoginContext } from "../../../context/LoginContext";
+
+import { PokemonCard } from "../Home/PokemonCard";
 
 export function Favourites() {
   const { isLoggedIn } = useContext(LoginContext);
-  const { pokemonsData, toggleFavourite, toggleArena,
+  const { pokemonsData, toggleArena,
     handleFavouriteClick, } = useContext(PokeDataContext);
 
   const [favouritesPokemons, setFavouritesPokemons] = useState([]);
@@ -46,10 +45,10 @@ export function Favourites() {
   //   }
   // }
 
-  function handleRemoveFromFavourite(pokemon) {
-    console.log("fav poke delete handled", pokemon);
-    removeFavourite(pokemon, BASE_URL, toggleFavourite);
-  }
+  // function handleRemoveFromFavourite(pokemon) {
+  //   console.log("fav poke delete handled", pokemon);
+  //   removeFavourite(pokemon, BASE_URL, toggleFavourite);
+  // }
 
   // function handleDeleteFavourite(id) {
   //   fetch(`${FAV_URL}/${id}`, {

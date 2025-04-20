@@ -51,7 +51,7 @@ export function PokemonCard({
 
   const handleArenaClick = (e) => {
     e.stopPropagation();
-    console.log('arena clicked')
+    // console.log('arena clicked')
     handleArena(pokemon.id);
   };
 

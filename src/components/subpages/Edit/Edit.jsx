@@ -1,8 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { LoginContext } from "../../../context/LoginContext";
 import { PokeDataContext } from "../../../context/PokeDataContext";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { Button } from "../../shared/Button";
 import { PokemonCard } from "../Home/PokemonCard";
 
@@ -10,6 +10,10 @@ export function Edit() {
   const { isLoggedIn } = useContext(LoginContext);
   const { pokemonsData } = useContext(PokeDataContext);
   const navigate = useNavigate();
+  // const [showOutlet, setShowOutlet] =useState(false)
+
+  const location = useLocation()
+  const isOnEditRoot = location.pathname === '/edit'
 
   console.log("islogged in edit", isLoggedIn);
 
@@ -17,7 +21,9 @@ export function Edit() {
     navigate("/edit/new");
   }
 
-  function handleEditPokemonClick() {
+  function handleEditPokemonClick(pokemonId) {
+    console.log("pokemon id", pokemonId);
+    setShowOutlet(true)
     navigate(`/edit/${pokemonId}`);
   }
 
@@ -29,7 +35,8 @@ export function Edit() {
 
   return (
     <>
-      <div className="mx-auto max-w-5xl px-4 py-8">
+
+    {isOnEditRoot ? <div className="mx-auto max-w-5xl px-4 py-8">
         <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-300">
           Edycja Pokemonów
         </h1>
@@ -64,7 +71,7 @@ export function Edit() {
                     <img
                       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
                       alt={pokemon.name}
-                      className="mx-auto h-16 aspect-square hover:scale-150 transition-transform duration-200 z-10"
+                      className="z-10 mx-auto aspect-square h-16 transition-transform duration-200 hover:scale-150"
                     />
                   </td>
                   <td className="border px-4 py-2 text-gray-900 dark:border-gray-700 dark:text-gray-100">
@@ -74,7 +81,7 @@ export function Edit() {
                     <td className="border px-4 py-2 text-center dark:border-gray-700">
                       <button
                         onClick={() => handleEditPokemonClick(pokemon.id)}
-                        className="rounded bg-sky-500 hover:bg-sky-600 px-4 py-1 text-slate-100 dark:bg-blue-500 dark:hover:bg-blue-600"
+                        className="rounded bg-sky-500 px-4 py-1 text-slate-100 hover:bg-sky-600 dark:bg-blue-500 dark:hover:bg-blue-600"
                       >
                         Edytuj
                       </button>
@@ -86,8 +93,10 @@ export function Edit() {
           </table>
         </div>
       </div>
+      :
+      <Outlet />
+      }
+      
     </>
   );
 }
-
-

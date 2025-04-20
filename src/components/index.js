@@ -8,11 +8,11 @@ import { Ranking } from "./subpages/Ranking/Ranking";
 import { Login } from "./subpages/Login/Login";
 import { RegistrationForm } from "./subpages/Login/RegistrationForm";
 import { LoginForm } from "./subpages/Login/LoginForm"
+import { EditPokemon } from "./subpages/Edit/EditPokemon";
+import { CreatePokemon } from "./subpages/Edit/CreatePokemon";
 
 export {
-  Favourites, NavBar, Wrapper, Home, Arena, Edit, Ranking, Login, RegistrationForm,  LoginForm 
+  Favourites, NavBar, Wrapper, Home, Arena, Edit, Ranking, Login, RegistrationForm,  LoginForm , EditPokemon, CreatePokemon
 }
 
-// export {
-//   Favourites, NavBar, Wrapper, Home, Arena, Edit, Ranking, Login, RegistrationForm, LoginForm 
-// }
+

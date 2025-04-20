@@ -13,6 +13,8 @@ import {
   Login,
   RegistrationForm,
   LoginForm,
+  EditPokemon,
+  CreatePokemon,
 } from "./components/index.js";
 
 import { LoginProvider } from "./context/LoginContext.jsx";
@@ -30,7 +32,14 @@ const router = createBrowserRouter([
       { element: <Favourites />, path: "/favourites" },
       { element: <Arena />, path: "/arena" },
       { element: <Ranking />, path: "/ranking" },
-      { element: <Edit />, path: "/edit" },
+      {
+        element: <Edit />,
+        path: "/edit",
+        children: [
+          { element: <EditPokemon />, path: ":id" },
+          { element: <CreatePokemon />, path: "new" },
+        ],
+      },
       {
         element: <Login />,
         path: "/login",
@@ -63,8 +72,3 @@ createRoot(document.getElementById("root")).render(
   </StrictMode>,
 );
 
-// createRoot(document.getElementById('root')).render(
-//   <StrictMode>
-//     <App />
-//   </StrictMode>,
-// )

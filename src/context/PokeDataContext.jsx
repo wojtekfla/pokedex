@@ -7,59 +7,56 @@ import { BASE_URL, JSON_SERVER_URL } from "../utils/constants";
 export const PokeDataContext = createContext();
 
 export const PokeDataProvider = ({ children }) => {
-  const {
-    pokemons,
-    setPokemons,
-    error,
-    isLoading,
-  } = useFetchPokemons();
+  const { pokemons, setPokemons, error, isLoading } = useFetchPokemons();
   const { isLoggedIn, loggedUser } = useContext(LoginContext);
   const [pokemonsData, setPokemonsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 30;
 
   // console.log("from pokedata loged User", loggedUser);
-  
 
   useEffect(() => {
     const mergePokemons = async () => {
       if (!isLoggedIn) {
         setPokemonsData(pokemons); // pokemony tylko z API
-        return
+        return;
       }
 
       try {
-        const jsonRes = await fetch (JSON_SERVER_URL)
-        const jsonPokemons = await jsonRes.json()
+        const jsonRes = await fetch(JSON_SERVER_URL);
+        const jsonPokemons = await jsonRes.json();
 
         const merged = pokemons.map((pokemon) => {
-          const local = jsonPokemons.find((p) => p.id === pokemon.id)
-          return local ? { ...pokemon, ...local } : pokemon
-        })
+          const local = jsonPokemons.find((p) => p.id === pokemon.id);
+          return local ? { ...pokemon, ...local } : pokemon;
+        });
 
         const newLocalOnly = jsonPokemons.filter(
-          (local) => !pokemons.some((apiP) => apiP.id === local.id)
-        )
+          (local) => !pokemons.some((apiP) => apiP.id === local.id),
+        );
 
-        setPokemonsData([...merged, ...newLocalOnly])
+        setPokemonsData([...merged, ...newLocalOnly]);
       } catch (err) {
-          console.error("Błąd przy pobieraniu z json-servera:", err);
-          setPokemonsData(pokemons); // fallback
+        console.error("Błąd przy pobieraniu z json-servera:", err);
+        setPokemonsData(pokemons); // fallback
       }
-    }
+    };
 
-    mergePokemons()
+    mergePokemons();
   }, [pokemons, isLoggedIn]);
 
   useEffect(() => {
-    console.log('Pokemons in context', pokemonsData)
+    console.log("Pokemons in context", pokemonsData);
   }, [pokemonsData]);
 
   // pagination
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentPokemons = (pokemonsData ?? []).slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(pokemons.length / itemsPerPage);
+  const totalPages =
+    pokemonsData.length > 0
+      ? Math.ceil(pokemonsData.length / itemsPerPage)
+      : Math.ceil(pokemons.length / itemsPerPage);
 
   function nextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -118,47 +115,46 @@ export const PokeDataProvider = ({ children }) => {
   }
 
   async function handleFavouriteClick(pokemon) {
-      const updatedPokemon = { ...pokemon, isFavourite: !pokemon.isFavourite };
-      console.log("handle fav click pokemon", updatedPokemon);
-  
-      try {
-        const response = await fetch(`${BASE_URL}/pokemons/${pokemon.id}`);
-  
-        if (response.ok) {
-          const data = await response.json();
-  
-          if (!updatedPokemon.isFavourite && !data.edited) {
-            // pokemon nie istniał w json-server jako edited lub po walce i został odklikniety
-            await fetch(`${BASE_URL}/pokemons/${pokemon.id}`, {
-              method: "DELETE",
-            });
-          } else {
-            // pokemon istnieje w json-server, aktualizujemu pole favourite
-            await fetch(`${BASE_URL}/pokemons/${pokemon.id}`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ isFavourite: updatedPokemon.isFavourite }),
-            });
-          }
+    const updatedPokemon = { ...pokemon, isFavourite: !pokemon.isFavourite };
+    console.log("handle fav click pokemon", updatedPokemon);
+
+    try {
+      const response = await fetch(`${BASE_URL}/pokemons/${pokemon.id}`);
+
+      if (response.ok) {
+        const data = await response.json();
+
+        if (!updatedPokemon.isFavourite && !data.edited) {
+          // pokemon nie istniał w json-server jako edited lub po walce i został odklikniety
+          await fetch(`${BASE_URL}/pokemons/${pokemon.id}`, {
+            method: "DELETE",
+          });
         } else {
-          // pokemon nie istnieje, dodajemy nowy element do tablicy pokemonów
-          await fetch(`${BASE_URL}/pokemons`, {
-            method: "POST",
+          // pokemon istnieje w json-server, aktualizujemu pole favourite
+          await fetch(`${BASE_URL}/pokemons/${pokemon.id}`, {
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(updatedPokemon),
+            body: JSON.stringify({ isFavourite: updatedPokemon.isFavourite }),
           });
         }
-  
-        toggleFavourite(pokemon.id);
-        
-      } catch (error) {
-        console.error("Błąd przy zapisie favourite do JSON-a", error);
+      } else {
+        // pokemon nie istnieje, dodajemy nowy element do tablicy pokemonów
+        await fetch(`${BASE_URL}/pokemons`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedPokemon),
+        });
       }
+
+      toggleFavourite(pokemon.id);
+    } catch (error) {
+      console.error("Błąd przy zapisie favourite do JSON-a", error);
     }
+  }
 
   // obsługa po walce w arenie, zmienić nazwę
   const handleDataFromJson = (data) => {
@@ -184,6 +180,65 @@ export const PokeDataProvider = ({ children }) => {
     setPokemonsData(newData);
   };
 
+  const createPokemon = async (pokemon) => {
+    const newPokemon = {
+      ...pokemon,
+      img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+      win: 0,
+      loss: 0,
+      ability: 'none',
+      isFavourite: false,
+      isInArena: false,
+      edited: true,
+      isCustom: true
+    };
+
+    console.log("NEW pokemon in context", newPokemon);
+    try {
+      // sprawdzam czy pokemon ma unikalne ID
+      const res = await fetch(`${JSON_SERVER_URL}?id={newPokemon.id}`);
+      const existing = await res.json();
+
+      if (existing.length > 0) {
+        enqueueSnackbar("A Pokemon with this ID already exist", {
+          variant: "error",
+        });
+        return;
+      }
+
+      // pokemon ma unikalne ID, tworzę nowego Pokemona
+      const response = await fetch(`${JSON_SERVER_URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...newPokemon,
+          isCustom: true,
+          edited: true,
+          win: 0,
+          loss: 0,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create Pokemon");
+      }
+
+      const savedNewPokemon = await response.json();
+      console.log("NEW POKEMON", savedNewPokemon);
+
+      setPokemonsData((prev) => [...prev, savedNewPokemon]);
+      enqueueSnackbar("Pokémon created successfully!", { variant: "success" });
+    } catch (error) {
+      console.error("Error creating Pokemon: ", error);
+      enqueueSnackbar("An error occures while creating new Pokemon", {
+        variant: "error",
+      });
+      throw error;
+    }
+  };
+
   return (
     <PokeDataContext.Provider
       value={{
@@ -200,7 +255,9 @@ export const PokeDataProvider = ({ children }) => {
         totalPages,
         nextPage,
         prevPage,
-        handleFavouriteClick
+        handleFavouriteClick,
+        updatePokemon,
+        createPokemon,
       }}
     >
       {children}
@@ -211,9 +268,3 @@ export const PokeDataProvider = ({ children }) => {
 export const usePokeData = () => {
   return useContext(PokeDataContext);
 };
-
-// function toggleArena2(id) {
-//   setPokemonsData((prev) =>
-//     prev.map((p) => (p.id === id ? { ...p, isInArena: !p.isInArena } : p)),
-//   );
-// }

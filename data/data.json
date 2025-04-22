@@ -85,19 +85,61 @@
       "edited": true
     },
     {
+      "id": 4,
+      "name": "charmander",
+      "height": 6,
+      "weight": 85,
+      "base_exp": 62,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg",
+      "ability": "blaze",
+      "isFavourite": true,
+      "isInArena": false,
+      "win": 0,
+      "loss": 0,
+      "edited": false
+    },
+    {
       "name": "Gruby Kuba",
       "weight": 500,
       "height": 100,
-      "base_exp": 100,
+      "base_exp": 110,
       "id": 160,
       "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/160.png",
-      "win": 0,
+      "win": 1,
       "loss": 1,
       "ability": "none",
       "isFavourite": false,
       "isInArena": false,
       "edited": true,
       "isCustom": true
+    },
+    {
+      "id": 58,
+      "name": "growlithe",
+      "height": 7,
+      "weight": 190,
+      "base_exp": 70,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/58.svg",
+      "ability": "intimidate",
+      "isFavourite": false,
+      "isInArena": false,
+      "win": 0,
+      "loss": 2,
+      "edited": true
+    },
+    {
+      "id": 117,
+      "name": "seadra",
+      "height": 12,
+      "weight": 250,
+      "base_exp": 164,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/117.svg",
+      "ability": "poison-point",
+      "isFavourite": false,
+      "isInArena": false,
+      "win": 1,
+      "loss": 0,
+      "edited": true
     }
   ],
   "arena": []

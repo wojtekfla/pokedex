@@ -4,6 +4,8 @@ import { useFetchPokemons } from "../hooks/useFetchPokemons";
 import { LoginContext } from "../context/LoginContext";
 import { BASE_URL, JSON_SERVER_URL } from "../utils/constants";
 
+const ITEMS_PER_PAGE = 30;
+
 export const PokeDataContext = createContext();
 
 export const PokeDataProvider = ({ children }) => {
@@ -11,9 +13,9 @@ export const PokeDataProvider = ({ children }) => {
   const { isLoggedIn, loggedUser } = useContext(LoginContext);
   const [pokemonsData, setPokemonsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 30;
+  const [filteredPokemons, setFilteredPokemons] = useState([]);
+  const [searchName, setSearchName] = useState("");
 
-  // console.log("from pokedata loged User", loggedUser);
 
   useEffect(() => {
     const mergePokemons = async () => {
@@ -46,17 +48,33 @@ export const PokeDataProvider = ({ children }) => {
   }, [pokemons, isLoggedIn]);
 
   useEffect(() => {
+    if (searchName.trim() === "") {
+      setFilteredPokemons(pokemonsData);
+    } else {
+      const filtered = pokemonsData.filter((pokemon) => {
+        return pokemon.name.toLowerCase().includes(searchName.toLowerCase());
+      });
+      setFilteredPokemons(filtered);
+    }
+  }, [searchName, pokemonsData]);
+
+  useEffect(() => {
     console.log("Pokemons in context", pokemonsData);
   }, [pokemonsData]);
 
-  // pagination
-  const indexOfLast = currentPage * itemsPerPage;
-  const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentPokemons = (pokemonsData ?? []).slice(indexOfFirst, indexOfLast);
-  const totalPages =
-    pokemonsData.length > 0
-      ? Math.ceil(pokemonsData.length / itemsPerPage)
-      : Math.ceil(pokemons.length / itemsPerPage);
+  useEffect(() => {
+    console.log("filteredPokemons", filteredPokemons);
+  }, [filteredPokemons]);
+
+  // pagination ver.2
+  const paginationSource = searchName.trim() === '' ? pokemonsData : filteredPokemons
+
+  const totalPages = Math.ceil(paginationSource.length / ITEMS_PER_PAGE);
+  const lastIndex = currentPage * ITEMS_PER_PAGE
+  const startIndex = lastIndex - ITEMS_PER_PAGE;
+
+  const currentPokemons = filteredPokemons.slice(
+    startIndex, lastIndex)
 
   function nextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -64,6 +82,10 @@ export const PokeDataProvider = ({ children }) => {
   function prevPage() {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   }
+
+  useEffect (() => {
+    setCurrentPage(1)
+  }, [searchName]) // nie wiem czy to potrzebne 
 
   // favourite
   function toggleFavourite(id) {
@@ -171,6 +193,7 @@ export const PokeDataProvider = ({ children }) => {
   };
 
   const updatePokemon = (pokemon) => {
+    console.log('UPDATE POK in context', pokemon)
     const newData = pokemonsData.map((item) => {
       if (item.id === pokemon.id) {
         return pokemon;
@@ -186,11 +209,11 @@ export const PokeDataProvider = ({ children }) => {
       img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
       win: 0,
       loss: 0,
-      ability: 'none',
+      ability: "none",
       isFavourite: false,
       isInArena: false,
       edited: true,
-      isCustom: true
+      isCustom: true,
     };
 
     console.log("NEW pokemon in context", newPokemon);
@@ -250,7 +273,6 @@ export const PokeDataProvider = ({ children }) => {
         toggleArena,
         pokemonsData,
         handleDataFromJson,
-        currentPokemons,
         currentPage,
         totalPages,
         nextPage,
@@ -258,6 +280,10 @@ export const PokeDataProvider = ({ children }) => {
         handleFavouriteClick,
         updatePokemon,
         createPokemon,
+        searchName,
+        setSearchName,
+        filteredPokemons,
+        currentPokemons
       }}
     >
       {children}

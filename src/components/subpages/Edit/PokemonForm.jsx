@@ -6,13 +6,11 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z.string().min(1, "Nazwa jest wymagana"),
-  weight: z.coerce.number().min(1, "Waga musi być większa od zera"),
-  height: z.coerce.number().min(1, "Wzrost musi być większy od zera"),
-  base_exp: z.coerce
-    .number()
-    .min(0, "Doświadczenie nie może być ujemne"),
-  id: z.coerce.number().min(151, "ID musi być większe lub równe 151"),
+  name: z.string().min(1, "Name is required"),
+  weight: z.coerce.number().min(1, "Weight must be greater than zero"),
+  height: z.coerce.number().min(1, "Height must be greater than zero"),
+  base_exp: z.coerce.number().min(0, "Experience cannot be negative"),
+  id: z.coerce.number().min(151, "ID must be greater than or equal to 151"),
 });
 
 export function PokemonForm({
@@ -60,6 +58,8 @@ export function PokemonForm({
   };
 
   const handleFormSubmit = async (data) => {
+    console.log('DATA in form', data)
+
     await onSubmit(data);
     enqueueSnackbar(isEditMode ? "Pokemon updated!" : "Pokemon created!", {
       variant: "success",

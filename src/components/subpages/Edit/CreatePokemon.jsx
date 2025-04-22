@@ -5,8 +5,6 @@ import { PokemonForm } from "./PokemonForm";
 export function CreatePokemon() {
   const { createPokemon, pokemonsData } = useContext(PokeDataContext);
 
-  console.log('createPokemon', createPokemon)
-
   const initialEmptyPokemon = {
     name: "",
     weight: 0,

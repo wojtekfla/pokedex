@@ -8,6 +8,7 @@ export function EditPokemon() {
   const { pokemonsData, updatePokemon } = useContext(PokeDataContext);
 
   const pokemonToEdit = pokemonsData.find((p) => p.id === Number(id));
+  console.log('POKEMON to EDIT', pokemonToEdit)
 
   if (!pokemonToEdit) return <p> Pokemon not found </p>;
 

@@ -15,15 +15,12 @@ export function Edit() {
   const location = useLocation()
   const isOnEditRoot = location.pathname === '/edit'
 
-  console.log("islogged in edit", isLoggedIn);
-
   function handleCreateNewPokemonClick() {
     navigate("/edit/new");
   }
 
   function handleEditPokemonClick(pokemonId) {
-    console.log("pokemon id", pokemonId);
-    setShowOutlet(true)
+    // setShowOutlet(true)
     navigate(`/edit/${pokemonId}`);
   }
 
@@ -31,7 +28,6 @@ export function Edit() {
     ? pokemonsData
     : pokemonsData.filter((p) => !p.isCustom && !p.edited);
 
-  console.log("visible pokemons", visiblePokemons);
 
   return (
     <>

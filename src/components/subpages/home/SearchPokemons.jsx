@@ -1,16 +1,26 @@
-import { useState } from "react"
-import { Button } from "../../shared/Button"
- 
-export function SearchPokemons () {
+import { useContext } from "react";
+import { PokeDataContext } from "../../../context/PokeDataContext";
 
-  const [name, setName] = useState('')
-  // console.log("name", name)
+import { FiSearch } from "react-icons/fi";
+
+export function SearchPokemons() {
+  const { searchName, setSearchName } = useContext(PokeDataContext);
 
   return (
+    <div className="my-2 flex justify-center">
+      <div className="relative w-[90%] max-w-sm">
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300" />
 
-    <div className="flex justify-center items-center min-h-12 mt-1 bg-amber-100">
-      <label className="h-8" htmlFor="pokemonName">Type name to search: </label>
-      <input className="mx-2 px-2 h-8 border-2 border-gray-300 rounded-md" type="text" name="pokemonName" id="pokemonName" onChange={(e)=> setName(e.target.value) } placeholder=""  />
+        <input
+          className="w-full rounded-md border border-gray-300 bg-slate-300 px-10 py-2 text-gray-900 placeholder-slate-500 shadow-sm transition  focus:border-2 focus:border-gray-500 dark:border-gray600 dark:bg-gray-800 dark:text-slate-300 dark:placeholder-slate-400"
+          type="text"
+          placeholder="Search Pokemon by name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+      </div>
     </div>
-  )
+  );
 }
+
+export default SearchPokemons;

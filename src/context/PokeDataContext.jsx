@@ -192,16 +192,70 @@ export const PokeDataProvider = ({ children }) => {
     setPokemonsData(newData);
   };
 
-  const updatePokemon = (pokemon) => {
-    console.log('UPDATE POK in context', pokemon)
-    const newData = pokemonsData.map((item) => {
-      if (item.id === pokemon.id) {
-        return pokemon;
+  async function updatePokemon (updatedPokemon) {
+    try {
+      const response = await fetch(`${JSON_SERVER_URL}/${updatedPokemon.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedPokemon)
+      })
+
+      if (!response.ok) {
+        throw new Error('Response not ok, failed to update Pokemon')
       }
-      return item;
-    });
-    setPokemonsData(newData);
-  };
+
+      //update local state if succesful request
+      const newData = pokemonsData.map((item) => item.id === updatedPokemon.id ? updatedPokemon : item)
+      setPokemonsData(newData)
+    } catch (error) {
+      console.error('In catch: Error updating Pokemon', error)
+    }
+  }
+  
+  async function updatePokemon2(updatedPokemon) {
+    try {
+      // 1️⃣ Najpierw spróbuj PATCH
+      const patchRes = await fetch(`${JSON_SERVER_URL}/${updatedPokemon.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedPokemon),
+      });
+  
+      if (patchRes.ok) {
+        // ✅ PATCH zadziałał — pobierz z serwera zwrócony obiekt (może mieć dodatkowe pola)
+        const saved = await patchRes.json();
+        setPokemonsData((prev) =>
+          prev.map((p) => (p.id === saved.id ? saved : p))
+        );
+        return;
+      }
+  
+      if (patchRes.status === 404) {
+        // 📦 Zasób nie istniał — utwórz nowego Pokemona
+        const postRes = await fetch(`${JSON_SERVER_URL}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...updatedPokemon, edited: true, isCustom: true }),
+        });
+  
+        if (!postRes.ok) {
+          throw new Error(`Failed to create Pokemon (status ${postRes.status})`);
+        }
+  
+        const created = await postRes.json();
+        setPokemonsData((prev) => [...prev, created]);
+        return;
+      }
+  
+      // 🤷‍♂️ Inny kod odpowiedzi niż 2xx/404
+      throw new Error(`Failed to update Pokemon (status ${patchRes.status})`);
+    } catch (err) {
+      // Logujemy tylko raz wszystkie nieoczekiwane błędy
+      console.error("Error in updatePokemon:", err);
+    }
+  }
 
   const createPokemon = async (pokemon) => {
     const newPokemon = {

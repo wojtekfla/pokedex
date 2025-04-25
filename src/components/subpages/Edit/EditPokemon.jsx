@@ -8,22 +8,23 @@ export function EditPokemon() {
   const { pokemonsData, updatePokemon } = useContext(PokeDataContext);
 
   const pokemonToEdit = pokemonsData.find((p) => p.id === Number(id));
-  console.log('POKEMON to EDIT', pokemonToEdit)
+  console.log("POKEMON to EDIT", pokemonToEdit);
 
   if (!pokemonToEdit) return <p> Pokemon not found </p>;
 
   return (
     <>
-    <h1>EDYCJA POKEMONA</h1>
-    
-    <PokemonForm
-      initialValues={pokemonToEdit}
-      onSubmit={() => console.log('pokemon to EDIT', pokemonToEdit)}
-      // onSubmit={updatePokemon}
-      isEditMode={true}
-      usedImageIds={pokemonsData.map((p) => p.id)}
-    />
+      <PokemonForm
+        initialValues={pokemonToEdit}
+        onSubmit={updatePokemon}
+        isEditMode={true}
+        usedImageIds={pokemonsData.map((p) => p.id)}
+      />
     </>
-    
   );
 }
+
+
+
+// "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+

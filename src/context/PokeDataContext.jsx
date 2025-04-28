@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { enqueueSnackbar } from "notistack";
 import { useFetchPokemons } from "../hooks/useFetchPokemons";
 import { LoginContext } from "../context/LoginContext";
-import { BASE_URL, JSON_SERVER_URL } from "../utils/constants";
+import { API_URL, BASE_URL, JSON_SERVER_URL } from "../utils/constants";
 
 const ITEMS_PER_PAGE = 30;
 
@@ -15,7 +15,6 @@ export const PokeDataProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredPokemons, setFilteredPokemons] = useState([]);
   const [searchName, setSearchName] = useState("");
-
 
   useEffect(() => {
     const mergePokemons = async () => {
@@ -58,23 +57,23 @@ export const PokeDataProvider = ({ children }) => {
     }
   }, [searchName, pokemonsData]);
 
-  useEffect(() => {
-    console.log("Pokemons in context", pokemonsData);
-  }, [pokemonsData]);
+  // useEffect(() => {
+  //   console.log("Pokemons in context", pokemonsData);
+  // }, [pokemonsData]);
 
   useEffect(() => {
     console.log("filteredPokemons", filteredPokemons);
   }, [filteredPokemons]);
 
   // pagination ver.2
-  const paginationSource = searchName.trim() === '' ? pokemonsData : filteredPokemons
+  const paginationSource =
+    searchName.trim() === "" ? pokemonsData : filteredPokemons;
 
   const totalPages = Math.ceil(paginationSource.length / ITEMS_PER_PAGE);
-  const lastIndex = currentPage * ITEMS_PER_PAGE
+  const lastIndex = currentPage * ITEMS_PER_PAGE;
   const startIndex = lastIndex - ITEMS_PER_PAGE;
 
-  const currentPokemons = filteredPokemons.slice(
-    startIndex, lastIndex)
+  const currentPokemons = filteredPokemons.slice(startIndex, lastIndex);
 
   function nextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -83,9 +82,9 @@ export const PokeDataProvider = ({ children }) => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   }
 
-  useEffect (() => {
-    setCurrentPage(1)
-  }, [searchName]) // nie wiem czy to potrzebne 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchName]); // nie wiem czy to potrzebne
 
   // favourite
   function toggleFavourite(id) {
@@ -190,70 +189,107 @@ export const PokeDataProvider = ({ children }) => {
       }
     });
     setPokemonsData(newData);
-  };
-
-  async function updatePokemon (updatedPokemon) {
-    try {
-      const response = await fetch(`${JSON_SERVER_URL}/${updatedPokemon.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedPokemon)
-      })
-
-      if (!response.ok) {
-        throw new Error('Response not ok, failed to update Pokemon')
-      }
-
-      //update local state if succesful request
-      const newData = pokemonsData.map((item) => item.id === updatedPokemon.id ? updatedPokemon : item)
-      setPokemonsData(newData)
-    } catch (error) {
-      console.error('In catch: Error updating Pokemon', error)
-    }
   }
-  
-  async function updatePokemon2(updatedPokemon) {
+
+  async function updatePokemon(updatedPokemon) {
     try {
-      // 1️⃣ Najpierw spróbuj PATCH
-      const patchRes = await fetch(`${JSON_SERVER_URL}/${updatedPokemon.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedPokemon),
-      });
-  
-      if (patchRes.ok) {
-        // ✅ PATCH zadziałał — pobierz z serwera zwrócony obiekt (może mieć dodatkowe pola)
-        const saved = await patchRes.json();
-        setPokemonsData((prev) =>
-          prev.map((p) => (p.id === saved.id ? saved : p))
+      // 1. sprawdzam czy pokemon jest już w bazie JSON-server
+      const getResponse = await fetch(
+        `${JSON_SERVER_URL}/${updatedPokemon.id}`,
+      );
+
+      let finalPokemonData;
+
+      if (getResponse.ok) {
+        // 2a. Pokemon istnieje, wykonuje PATCH
+        const existingJson = await getResponse.json();
+        finalPokemonData = {
+          ...existingJson,
+          ...updatedPokemon,
+          edited: true,
+        };
+        const patchResponse = await fetch(
+          `${JSON_SERVER_URL}/${updatedPokemon.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(finalPokemonData),
+          },
         );
-        return;
-      }
-  
-      if (patchRes.status === 404) {
-        // 📦 Zasób nie istniał — utwórz nowego Pokemona
-        const postRes = await fetch(`${JSON_SERVER_URL}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...updatedPokemon, edited: true, isCustom: true }),
-        });
-  
-        if (!postRes.ok) {
-          throw new Error(`Failed to create Pokemon (status ${postRes.status})`);
+
+        if (!patchResponse.ok) {
+          throw new Error("Failed to patch existing Pokemon");
         }
-  
-        const created = await postRes.json();
-        setPokemonsData((prev) => [...prev, created]);
-        return;
+
+        enqueueSnackbar(
+          `Pokemon "${updatedPokemon.name}" updated successfuly`,
+          { variant: "success" },
+        );
+      } else if (getResponse.status === 404) {
+        // 2b. Pokemon nie istnieje w bazie, pobieram dane z lokalnego stanu pokemonow z API w celu stworenia obiektu z potrzebnymi polami
+        const pokemonDataFromApi = pokemons.find(
+          (p) => p.id === updatedPokemon.id,
+        );
+
+        if (!pokemonDataFromApi) {
+          throw new Error("Pokemon not found in local state");
+        }
+
+        finalPokemonData = {
+          ...pokemonDataFromApi,
+          ...updatedPokemon,
+          edited: true,
+        };
+        console.log("Final pokemon data", finalPokemonData);
+
+        const postResponse = await fetch(`${JSON_SERVER_URL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalPokemonData),
+        });
+
+        if (!postResponse.ok) {
+          throw new Error("Failed to add new Pokemon to JSON-server");
+        }
+
+        enqueueSnackbar(`Pokemon "${updatedPokemon.name}" added to database`, {
+          variant: "success",
+        });
+      } else {
+        // 2c. inny błąd HTTP niż 404
+        throw new Error(`Unexpected response status: ${getResponse.status}`);
       }
-  
-      // 🤷‍♂️ Inny kod odpowiedzi niż 2xx/404
-      throw new Error(`Failed to update Pokemon (status ${patchRes.status})`);
-    } catch (err) {
-      // Logujemy tylko raz wszystkie nieoczekiwane błędy
-      console.error("Error in updatePokemon:", err);
+
+      // 3. Aktualizuje stan dla listy pokemonów
+      setPokemonsData((prev) => {
+        const existPokemon = prev.some((p) => p.id === finalPokemonData.id);
+
+        console.log("final exist pokemon", existPokemon);
+
+        if (existPokemon) {
+          return prev.map((p) =>
+            p.id === finalPokemonData.id ? finalPokemonData : p,
+          );
+        } else {
+          return [...prev, finalPokemonData];
+        }
+      });
+
+      enqueueSnackbar(
+        `Pokemon "${finalPokemonData.name}" updated successfuly!`,
+        {
+          variant: "success",
+        },
+      );
+    } catch (error) {
+      console.error("updatePokemon error: ", error);
+      enqueueSnackbar(`Error updating Pokemon: ${error.message}`, {
+        variant: "error",
+      });
     }
   }
 
@@ -326,6 +362,7 @@ export const PokeDataProvider = ({ children }) => {
         toggleFavourite,
         toggleArena,
         pokemonsData,
+        setPokemonsData,
         handleDataFromJson,
         currentPage,
         totalPages,
@@ -337,7 +374,7 @@ export const PokeDataProvider = ({ children }) => {
         searchName,
         setSearchName,
         filteredPokemons,
-        currentPokemons
+        currentPokemons,
       }}
     >
       {children}

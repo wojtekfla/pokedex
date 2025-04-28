@@ -1,106 +1,139 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { PokeDataContext } from "../../../context/PokeDataContext";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
-import { Button } from "../../shared/Button";
-import { PokemonCard } from "../Home/PokemonCard";
-import { saveToJson } from "../../../utils/saveToJson";
-import { loadFromJson } from "../../../utils/loadFromJson";
-import { enqueueSnackbar, useSnackbar } from "notistack";
 import { LuSwords } from "react-icons/lu";
-
-import { API_URL, JSON_SERVER_URL } from "../../../utils/constants";
+import { JSON_SERVER_URL } from "../../../utils/constants";
+import { ArenaSlot } from "./ArenaSlot";
 
 export function Arena() {
-  // const [pokemonsInArena, setPokemonsInArena] = useState([]);
-  const { pokemonsData, setPokemonsData, handleDataFromJson } =
-    useContext(PokeDataContext);
+  const { pokemonsData, setPokemonsData } = useContext(PokeDataContext);
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [result, setResult] = useState(null);
 
-  let pokemonsInArena = pokemonsData.filter((item) => item.isInArena === true);
+  const pokemonsInArena = pokemonsData.filter((p) => p.isInArena);
 
-
-  const handleFightClick = () => {
-    let [pokemonOne, pokemonTwo] = pokemonsData.filter(
-      (item) => item.isInArena === true,
-    );
-
-    const pokemonOnePower = pokemonOne.base_exp * pokemonOne.weight;
-    const pokemonTwoPower = pokemonTwo.base_exp * pokemonTwo.weight;
-
-    console.log("pokemons to fight");
-    console.log("pok1", pokemonOnePower);
-    console.log("pok2", pokemonTwoPower);
-
-    if (pokemonOnePower === pokemonTwoPower) {
-      enqueueSnackbar("A drow, no one lost"), { variant: "info" };
+  const handleFightClick = async () => {
+    if (pokemonsInArena.length < 2) {
+      enqueueSnackbar("Select two Pokemons first", { variant: "info" });
+      return;
     }
 
-    if (pokemonOnePower > pokemonTwoPower) {
-      pokemonOne = {
-        ...pokemonOne,
-        win: pokemonOne.win + 1,
-        base_exp: Number(pokemonOne.base_exp + 10),
-        edited: true,
-      };
-      pokemonTwo = { ...pokemonTwo, loss: pokemonTwo.loss + 1, edited: true };
+    const [p1, p2] = pokemonsInArena;
+    const power1 = p1.base_exp * p1.weight;
+    const power2 = p2.base_exp * p2.weight;
+
+    let winnerId = null;
+    let loserId = null;
+
+    if (power1 === power2) {
+      enqueueSnackbar("It's a draw! No one losses", { variant: "info" });
+      // tu dodać czyszczenie isInArena
+      setTimeout(() => navigate("/"), 2000);
+      return;
+    } else if (power1 > power2) {
+      winnerId = p1.id;
+      loserId = p2.id;
     } else {
-      pokemonTwo = {
-        ...pokemonTwo,
-        win: pokemonTwo.win + 1,
-        base_exp: Number(pokemonTwo.base_exp + 10),
-        edited: true,
-      };
-      pokemonOne = { ...pokemonOne, loss: pokemonOne.loss + 1, edited: true };
+      winnerId = p2.id;
+      loserId = p1.id;
     }
 
-    enqueueSnackbar("Battle finished! Updating stats...", {
-      variant: "success",
+    const updatedArena = pokemonsInArena.map((p) => {
+      const isWinner = p.id === winnerId;
+      const isLoser = p.id === loserId;
+      return {
+        ...p,
+        isInArena: false,
+        edited: true,
+        win: p.win + (isWinner ? 1 : 0),
+        loss: p.loss + (isLoser ? 1 : 0),
+        base_exp: p.base_exp + (isWinner ? 10 : 0),
+      };
     });
 
-    const newPokemonOne = { ...pokemonOne, isInArena: false };
-    saveData(JSON_SERVER_URL, newPokemonOne);
-    const newPokemonTwo = { ...pokemonTwo, isInArena: false };
-    saveData(JSON_SERVER_URL, newPokemonTwo);
+    try {
+      await Promise.all(
+        updatedArena.map(async (p) => {
+          const getRes = await fetch(`${JSON_SERVER_URL}/${p.id}`);
+          if (getRes.ok) {
+            await fetch(`${JSON_SERVER_URL}/${p.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(p),
+            });
+          } else if (getRes.status === 404) {
+            await fetch(`${JSON_SERVER_URL}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(p),
+            });
+          }
+        }),
+      );
 
-    setTimeout(() => {
-      handleDataFromJson([newPokemonOne, newPokemonTwo]);
-      // pokemonsInArena = null
-      navigate("/");
-    }, 2 * 1000);
+      setPokemonsData((prev) =>
+        prev.map((orginalPokemon) => {
+          const afterBattlePokemon = updatedArena.find(
+            (p) => p.id === orginalPokemon.id,
+          );
+          return afterBattlePokemon ? afterBattlePokemon : orginalPokemon;
+        }),
+      );
+
+      setResult({ winnerId, loserId });
+      enqueueSnackbar("Battle finished!", { variant: "success" });
+
+      setTimeout(() => navigate("/"), 2000);
+    } catch (err) {
+      console.error("Error saving battle result: ", err);
+      enqueueSnackbar("Error updating server data", { variant: "error" });
+    }
   };
 
-  async function saveData(url, data) {
-    await saveToJson(url, data);
-  }
-
   return (
-    <>
-      <div className="mx-auto my-3 flex w-11/12 justify-center text-center">
-        <div className="h-4/5 min-h-[400px] w-2/5 outline outline-2">
-          {pokemonsInArena.length > 0 && pokemonsInArena[0] ? (
-            <PokemonCard pokemon={pokemonsInArena[0]} />
-          ) : (
-            <div>Pokemon 1</div>
-          )}
-        </div>
+    <div className="mx-auto max-w-4xl p-4">
+      <h1 className="mb-6 text-center text-2xl font-bold dark:text-slate-300">
+        Arena Battle
+      </h1>
 
-        <div className="mx-5 my-auto min-h-20">
-          <button onClick={handleFightClick} className="">
-            <LuSwords className="my-auto size-12 rounded outline outline-1" />
+      <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-3">
+        <ArenaSlot
+          pokemon={pokemonsInArena[0]}
+          label={pokemonsInArena[0]?.name}
+          status={
+            result?.winnerId === pokemonsInArena[0]?.id
+              ? "winner"
+              : result?.loserId === pokemonsInArena[0]?.id
+                ? "loser"
+                : undefined
+          }
+        />
+
+        <div className="flex justify-center">
+          <button
+            onClick={handleFightClick}
+            disabled={pokemonsInArena.length < 2}
+            className="rounded-full bg-red-500 p-4 text-slate-300 hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-gray-400"
+          >
+            <LuSwords size={32} />
           </button>
         </div>
 
-        <div className="h-4/5 min-h-[400px] w-2/5 outline outline-2">
-          {pokemonsInArena.length > 0 && pokemonsInArena[1] ? (
-            <PokemonCard pokemon={pokemonsInArena[1]} />
-          ) : (
-            <div>Pokemon 2</div>
-          )}
-        </div>
+        <ArenaSlot
+          pokemon={pokemonsInArena[1]}
+          label={pokemonsInArena[1]?.name}
+          status={
+            result?.winnerId === pokemonsInArena[1]?.id
+              ? "winner"
+              : result?.loserId === pokemonsInArena[1]?.id
+                ? "loser"
+                : undefined
+          }
+        />
       </div>
-    </>
+    </div>
   );
 }
-
-

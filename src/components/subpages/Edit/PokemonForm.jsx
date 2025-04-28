@@ -76,7 +76,7 @@ export function PokemonForm({
     console.log("DATA in form", data);
 
     await onSubmit(data);
-    enqueueSnackbar(isEditMode ? "Pokemon updated!" : "Pokemon created!", {
+    enqueueSnackbar(isEditMode ? "Pokemon updated! (PokemonForm)" : "Pokemon created! (PokemonForm)", {
       variant: "success",
     });
     navigate("/");

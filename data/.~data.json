@@ -69,6 +69,20 @@
       "win": 5,
       "loss": 0,
       "edited": true
+    },
+    {
+      "id": 6,
+      "name": "charizard",
+      "height": 17,
+      "weight": 905,
+      "base_exp": 267,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg",
+      "ability": "blaze",
+      "isFavourite": false,
+      "isInArena": false,
+      "win": 0,
+      "loss": 1,
+      "edited": true
     }
   ],
   "arena": []

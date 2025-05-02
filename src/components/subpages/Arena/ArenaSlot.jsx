@@ -1,24 +1,26 @@
+import clsx from 'clsx'
 import { PokemonCard } from "../Home/PokemonCard" 
 
-export function ArenaSlot ({pokemon, label, status}) {
-
-  let base = 'h-full min-h-[200px] flex flex-col items-center justify-center rounded border-2 p-4'
-
-  if (status === 'winner') {
-    base += 'border-green-500'
-  } else if (status === 'loser') {
-    base += 'opacity-50 border-gray-300 dark:border-gray-600'
-  } else {
-    base += 'border-gray-300 dark:border-gray-600'
-  }
+export function ArenaSlot ({pokemon, status, onRemove}) {
+  console.log('pokemon in arena', pokemon)
 
   return (
-    <div className={base}>
+    <div className={clsx(
+      'rounded-lg p-4 shadow-md transition-all duration-500 transform',
+      status === 'winner' && 'border-4 border-green-500 scale-110',
+      status === 'loser' && 'opacity-50 grayscale',
+      !status && 'border-2 border-gray-300'
+    )}>
       {pokemon ? (
-        <PokemonCard pokemon={pokemon} isLoggedIn={true}/>
+        <div onClick={onRemove} className='cursor-pointer'>
+          <PokemonCard pokemon={pokemon} />
+        </div>
       ) : (
-        <span className="text-gray-500 dark:text-gray-400">{label}</span>
+        <div className='flex h-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-400 p-8 text-center text-gray-500 dark:text-gray-400'>
+          <p>Select Pokemon to Arena</p>
+        </div>
       )}
     </div>
   )
 }
+

@@ -14,6 +14,7 @@ export function Edit() {
 
   const location = useLocation();
   const isOnEditRoot = location.pathname === "/edit";
+  // jeżeli isOnEditRoot = true jeżeli ścieżka = /edit
 
   function handleCreateNewPokemonClick() {
     navigate("/edit/new");

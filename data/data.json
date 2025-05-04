@@ -5,13 +5,8 @@
       "email": "w@w.pl",
       "password": "Qwerty123!",
       "id": 1
-    },
-    {
-      "userName": "Kokosz",
-      "email": "qaz@qaz",
-      "password": "Kokosz123!",
-      "id": 2
     }
+
   ],
   "pokemons": [
     {

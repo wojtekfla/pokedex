@@ -8,9 +8,7 @@ export function Ranking() {
 
   return (
     <>
-      <div>
         <RankingTable data={pokemonsData} />
-      </div>
     </>
   );
 }

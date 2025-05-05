@@ -5,7 +5,7 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import clsx from "clsx";
 
 export function DarkModeSwitch() {
-  const { darkMode, toggleDarkMode, clearDarkMode } = useContext(ThemeContext);
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
 
   return (
     <div className="flex justify-end">

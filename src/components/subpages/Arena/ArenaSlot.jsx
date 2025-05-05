@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import { PokemonCard } from "../Home/PokemonCard" 
 
 export function ArenaSlot ({pokemon, status, onRemove}) {
-  console.log('pokemon in arena', pokemon)
 
   return (
     <div className={clsx(

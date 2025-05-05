@@ -73,8 +73,6 @@ export function PokemonForm({
   };
 
   const handleFormSubmit = async (data) => {
-    console.log("DATA in form", data);
-
     await onSubmit(data);
     enqueueSnackbar(isEditMode ? "Pokemon updated! (PokemonForm)" : "Pokemon created! (PokemonForm)", {
       variant: "success",
@@ -93,7 +91,7 @@ export function PokemonForm({
 
       <div>
         <label className="block font-medium text-gray-700 dark:text-gray-200">
-          Nazwa:
+          Name:
         </label>
         <input
           type="text"
@@ -146,7 +144,7 @@ export function PokemonForm({
 
       <div>
         <label className="block font-medium text-gray-700 dark:text-gray-200">
-          Waga:
+          Weight:
         </label>
         <input
           type="number"
@@ -160,7 +158,7 @@ export function PokemonForm({
 
       <div>
         <label className="block font-medium text-gray-700 dark:text-gray-200">
-          Wzrost:
+          Height:
         </label>
         <input
           type="number"
@@ -174,7 +172,7 @@ export function PokemonForm({
 
       <div>
         <label className="block font-medium text-gray-700 dark:text-gray-200">
-          Doświadczenie:
+          Experience:
         </label>
         <input
           type="number"
@@ -190,7 +188,7 @@ export function PokemonForm({
         type="submit"
         className="w-full rounded bg-sky-600 px-3 py-2 font-semibold text-white hover:bg-sky-700 dark:bg-blue-600 dark:hover:bg-blue-700"
       >
-        {isEditMode ? "Zmień atrybuty" : "Stwórz"}
+        {isEditMode ? "Save changes" : "Create"}
       </button>
     </form>
   );

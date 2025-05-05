@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { PokeDataContext } from "../../../context/PokeDataContext";
 import { LoginContext } from "../../../context/LoginContext";
 import { Modal } from "../../shared/Modal";
 import { PokemonCard } from "./PokemonCard";
 import { PokemonDetails } from "./PokemonDetails";
+import { Pagination } from "../../shared/Pagination";
 
 export function PokemonsList() {
   const {
@@ -19,10 +20,6 @@ export function PokemonsList() {
   const { isLoggedIn } = useContext(LoginContext);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  useEffect(() => {
-    console.log("clicked pokemon", selectedPokemon);
-  }, [selectedPokemon]);
-
   const handleCardClick = (pokemon) => {
     setSelectedPokemon(pokemon);
   };
@@ -30,9 +27,6 @@ export function PokemonsList() {
   const modalClose = () => {
     setSelectedPokemon(null);
   };
-
-//   console.log("filteredPokemons", filteredPokemons);
-//  console.log("paginatedPokemons", paginatedPokemons);
 
   return (
     <>
@@ -55,32 +49,17 @@ export function PokemonsList() {
           <PokemonDetails pokemon={selectedPokemon} />
         </Modal>
       )}
-
-      <div className="mt-6 flex justify-center gap-4 bg-yellow-100">
-        <button
-          onClick={prevPage}
-          disabled={currentPage === 1}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
-        >
-          ⬅️ Poprzednia
-        </button>
-        <span className="text-lg font-bold">
-          {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:bg-gray-300"
-        >
-          Następna ➡️
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        nextPage={nextPage}
+        prevPage={prevPage}
+      />
     </>
   );
 }
 
-{
-  /* <Modal onClose={() => setSelectedPokemon(null)}>
-  <PokemonDetails pokemon={selectedPokemon} />
-</Modal>; */
-}
+
+
+
+

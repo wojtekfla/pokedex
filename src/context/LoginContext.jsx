@@ -8,7 +8,6 @@ export const LoginProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // const storedLoggedIn = localStorage.getItem('isLoggedIn')
     const storedUser = localStorage.getItem('loggedUser')
 
     if (storedUser) {

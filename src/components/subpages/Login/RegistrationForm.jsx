@@ -41,9 +41,6 @@ export function RegistrationForm() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  // const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  // const [formData, setFormData] = useState(null);
-
   const {
     register,
     handleSubmit,
@@ -111,7 +108,6 @@ export function RegistrationForm() {
   }
 
   const onSubmit = async (data) => {
-    console.log("submited data", data);
     // const hashedPassword = await hashPassword(data.password)
     // wyłączam hashowanie dla czytelności json/users
 
@@ -120,13 +116,9 @@ export function RegistrationForm() {
       email: data.email,
       password: data.password,
     };
-    console.log("newUser", newUser);
 
     addUser(newUser);
-
-    // setFormData(data)
-    // setIsFormSubmitted(true)
-  };
+  }
 
   return (
     <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center dark:bg-gray-800 dark:text-white">
@@ -186,98 +178,6 @@ export function RegistrationForm() {
     </div>
   );
 }
-
-
-
-// <>
-//       <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center dark:bg-gray-800 dark:text-slate-300">
-//         <form
-//           onSubmit={handleSubmit(onSubmit)}
-//           className="flex flex-col justify-center gap-2"
-//         >
-//           <div>
-//             <label htmlFor="userName">Username </label>
-//             <input
-//               {...register("userName")}
-//               id="userName"
-//               name="userName"
-//               type="text"
-//               // className="border-2 border-l-neutral-300"
-//               className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-//             />
-//             {errors.userName && (
-//               <p className="text-red-500 dark:text-red-400">
-//                 {errors.userName.message}
-//               </p>
-//             )}
-//           </div>
-
-//           <div>
-//             <label htmlFor="email">email </label>
-//             <input
-//               {...register("email")}
-//               id="email"
-//               type="text"
-//               className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-//             ></input>
-//             {errors.email && (
-//               <p className="text-red-500 dark:text-red-400">
-//                 {errors.email.message}
-//               </p>
-//             )}
-//           </div>
-
-//           <div>
-//             <label htmlFor="password">password </label>
-
-//             <input
-//               {...register("password")}
-//               id="password"
-//               type="text"
-//               className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-//             ></input>
-//             {errors.password && (
-//               <p className="pt-1 leading-3 text-red-500 dark:text-red-400">
-//                 {errors.password.message}
-//               </p>
-//             )}
-//           </div>
-
-//           <div>
-//             <label htmlFor="password2">confirm password </label>
-
-//             <input
-//               {...register("password2")}
-//               id="password2"
-//               type="text"
-//               className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-//             ></input>
-//             {errors.password2 && (
-//               <p className="pt-1 leading-3 text-red-500 dark:text-red-400">
-//                 {errors.password2.message}
-//               </p>
-//             )}
-//           </div>
-
-//           <button
-//             type="submit"
-//             disabled={isSubmitting || loading}
-//             className="mt-2 rounded bg-sky-500 px-3 py-1 text-white hover:bg-sky-400 disabled:bg-sky-300 dark:bg-sky-700 dark:hover:bg-sky-600"
-//           >
-//             {loading ? "Creating account ..." : "Register"}
-//           </button>
-
-//           <div>
-//             <button
-//               onClick={checkUser}
-//               className="mt-2 rounded bg-sky-500 px-3 py-1 text-white hover/edit:scale-105 hover:bg-sky-400"
-//             >
-//               Check user in database
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </>
 
 
 

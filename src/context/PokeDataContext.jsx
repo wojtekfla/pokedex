@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { enqueueSnackbar } from "notistack";
 import { useFetchPokemons } from "../hooks/useFetchPokemons";
 import { LoginContext } from "../context/LoginContext";
-import { API_URL, BASE_URL, JSON_SERVER_URL } from "../utils/constants";
+import { BASE_URL, JSON_SERVER_URL } from "../utils/constants";
 
 const ITEMS_PER_PAGE = 30;
 
@@ -57,15 +57,7 @@ export const PokeDataProvider = ({ children }) => {
     }
   }, [searchName, pokemonsData]);
 
-  // useEffect(() => {
-  //   console.log("Pokemons in context", pokemonsData);
-  // }, [pokemonsData]);
 
-  useEffect(() => {
-    console.log("filteredPokemons", filteredPokemons);
-  }, [filteredPokemons]);
-
-  // pagination ver.2
   const paginationSource =
     searchName.trim() === "" ? pokemonsData : filteredPokemons;
 
@@ -120,8 +112,7 @@ export const PokeDataProvider = ({ children }) => {
     }
 
     const pokemonsInArena = pokemonsData.filter((p) => p.isInArena);
-    console.log("pokemons in arena", pokemonsInArena);
-
+  
     if (pokemonsInArena.length >= 2) {
       enqueueSnackbar("You can only add 2 Pokemons to the arena!", {
         variant: "warning",
@@ -132,7 +123,6 @@ export const PokeDataProvider = ({ children }) => {
     setPokemonsData((prev) =>
       prev.map((p) => (p.id === id ? { ...p, isInArena: true } : p)),
     );
-    // pamiętać o returnie przy zapisie z klamrami fn((a) => { return ... })
   }
 
   async function handleFavouriteClick(pokemon) {
@@ -177,8 +167,8 @@ export const PokeDataProvider = ({ children }) => {
     }
   }
 
-  // obsługa po walce w arenie, zmienić nazwę
-  const handleDataFromJson = (data) => {
+  // obsługa po walce w arenie stara wersja skasowac
+  const handleDataFromJson2 = (data) => {
     const newData = pokemonsData.map((item) => {
       const element = data.find((itemFromJson) => itemFromJson.id === item.id);
       if (element) {
@@ -363,7 +353,7 @@ export const PokeDataProvider = ({ children }) => {
         toggleArena,
         pokemonsData,
         setPokemonsData,
-        handleDataFromJson,
+        handleDataFromJson2,
         currentPage,
         totalPages,
         nextPage,

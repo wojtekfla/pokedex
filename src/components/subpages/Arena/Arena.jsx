@@ -106,9 +106,6 @@ export function Arena() {
       }
     }, 2000);
 
-    setTimeout(() => {
-      console.log("timeout");
-    }, 2000);
   };
 
   return (

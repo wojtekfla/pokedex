@@ -3,10 +3,9 @@
     {
       "userName": "Wojtek",
       "email": "w@w.pl",
-      "password": "Qwerty123!",
+      "password": "Qwerty123$",
       "id": 1
     }
-
   ],
   "pokemons": [
     {
@@ -14,12 +13,12 @@
       "name": "bulbasaur",
       "height": 7,
       "weight": 69,
-      "base_exp": 64,
+      "base_exp": 74,
       "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg",
       "ability": "overgrow",
-      "isFavourite": true,
+      "isFavourite": false,
       "isInArena": false,
-      "win": 0,
+      "win": 1,
       "loss": 4,
       "edited": true
     },
@@ -31,7 +30,7 @@
       "base_exp": 192,
       "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/2.svg",
       "ability": "overgrow",
-      "isFavourite": true,
+      "isFavourite": false,
       "isInArena": false,
       "win": 5,
       "loss": 2,
@@ -48,7 +47,7 @@
       "isFavourite": false,
       "isInArena": false,
       "win": 2,
-      "loss": 5,
+      "loss": 6,
       "edited": true
     },
     {
@@ -62,7 +61,49 @@
       "isFavourite": false,
       "isInArena": false,
       "win": 5,
+      "loss": 1,
+      "edited": true
+    },
+    {
+      "id": 5,
+      "name": "charmeleon",
+      "height": 11,
+      "weight": 190,
+      "base_exp": 152,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/5.svg",
+      "ability": "blaze",
+      "isFavourite": false,
+      "isInArena": false,
+      "win": 1,
       "loss": 0,
+      "edited": true
+    },
+    {
+      "id": 143,
+      "name": "snorlax",
+      "height": 21,
+      "weight": 4600,
+      "base_exp": 199,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/143.svg",
+      "ability": "immunity",
+      "isFavourite": false,
+      "isInArena": false,
+      "win": 1,
+      "loss": 0,
+      "edited": true
+    },
+    {
+      "id": 10,
+      "name": "caterpie",
+      "height": 3,
+      "weight": 29,
+      "base_exp": 39,
+      "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/10.svg",
+      "ability": "shield-dust",
+      "isFavourite": false,
+      "isInArena": false,
+      "win": 0,
+      "loss": 1,
       "edited": true
     }
   ],

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 export function Modal({ children, onClose }) {
-  console.log("on close modal", onClose);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -23,6 +22,5 @@ export function Modal({ children, onClose }) {
       > */}
         {children}
       </div>
-    // </div>
   );
 }

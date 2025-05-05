@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -30,7 +30,6 @@ export function LoginForm() {
   });
 
   async function onSubmit(data) {
-    console.log("submited data", data);
 
     try {
       setLoading(true);
@@ -72,40 +71,6 @@ export function LoginForm() {
       setLoading(false);
     }
   }
-
-  const checkUserStatus = (data) => {
-    const usersJson = getUsersData();
-    if (usersJson) {
-      setUsersFromJson(usersJson);
-      console.log(usersFromJson);
-    }
-  };
-
-  async function getUsersData() {
-    const url = "http://localhost:3000/users";
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-      const json = await response.json();
-      console.log("json", json);
-      return json;
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-
-  const onSubmit2 = (data) => {
-    console.log("submited data", data);
-    const nameToCheck = data.userName;
-    console.log("name => ", nameToCheck);
-    console.log("users data", usersData);
-    const isUser = usersData.find((user) => {
-      return user.userName === nameToCheck;
-    }).userName;
-    console.log(isUser);
-  };
 
   return (
     <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center dark:bg-gray-800 dark:text-white">
@@ -158,40 +123,3 @@ export function LoginForm() {
     </div>
   );
 }
-
-// <>
-//       <div className="mx-auto flex max-w-xs justify-center rounded-br-2xl rounded-tl-2xl bg-gray-300 py-4 text-center dark:bg-gray-800 dark:text-slate-300">
-//         <form onSubmit={handleSubmit(onSubmit)}>
-//           <div>
-//             <label htmlFor="userName" className='flex justify-center w-4/5'>Name </label>
-//             <input
-//               {...register("userName")}
-//               id="userName"
-//               type="text"
-//               className="w-3/5 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-//             />
-//             {errors.userName && (
-//               <p className="text-red-500">{errors.userName.message}</p>
-//             )}
-//           </div>
-//           <div>
-//             <div>
-//               <label htmlFor="password">password </label>
-//             </div>
-//             <input
-//               {...register("password")}
-//               id="password"
-//               type="password"
-//               value="Qwerty123!"
-//               className="border-2 border-l-neutral-300"
-//             />
-//             {errors.password && (
-//               <p className="text-red-500">{errors.password.message}</p>
-//             )}
-//           </div>
-//           <button className="mt-2 rounded bg-sky-500 px-3 py-1 text-white">
-//             Sign in
-//           </button>
-//         </form>
-//       </div>
-//     </>

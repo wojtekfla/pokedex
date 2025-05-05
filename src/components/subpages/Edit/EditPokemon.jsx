@@ -8,8 +8,6 @@ export function EditPokemon() {
   const { pokemonsData, updatePokemon } = useContext(PokeDataContext);
 
   const pokemonToEdit = pokemonsData.find((p) => p.id === Number(id));
-  console.log("POKEMON to EDIT", pokemonToEdit);
-
   if (!pokemonToEdit) return <p> Pokemon not found </p>;
 
   return (
@@ -25,6 +23,4 @@ export function EditPokemon() {
 }
 
 
-
-// "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
 

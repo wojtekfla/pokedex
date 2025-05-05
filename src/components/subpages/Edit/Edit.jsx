@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { LoginContext } from "../../../context/LoginContext";
 import { PokeDataContext } from "../../../context/PokeDataContext";
 
@@ -10,8 +10,6 @@ export function Edit() {
   const { isLoggedIn } = useContext(LoginContext);
   const { pokemonsData } = useContext(PokeDataContext);
   const navigate = useNavigate();
-  // const [showOutlet, setShowOutlet] =useState(false)
-
   const location = useLocation();
   const isOnEditRoot = location.pathname === "/edit";
   // jeżeli isOnEditRoot = true jeżeli ścieżka = /edit
@@ -21,7 +19,6 @@ export function Edit() {
   }
 
   function handleEditPokemonClick(pokemonId) {
-    // setShowOutlet(true)
     navigate(`/edit/${pokemonId}`);
   }
 
@@ -33,17 +30,13 @@ export function Edit() {
     <>
       {isOnEditRoot ? (
         <div className="mx-auto max-w-5xl px-4 py-8">
-          <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-300">
-            Edycja Pokemonów
-          </h1>
-
           {isLoggedIn && (
             <div className="mb-6 text-center">
               <button
                 onClick={handleCreateNewPokemonClick}
                 className="rounded bg-blue-600 px-4 py-2 text-gray-100 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
               >
-                Stwórz nowego Pokemona
+                Create new Pokemon
               </button>
             </div>
           )}
@@ -71,7 +64,7 @@ export function Edit() {
                         // transition-transform duration-200 hover:scale-125
                       />
                     </td>
-                    <td className="border px-4 py-2 text-gray-900 dark:border-gray-700 dark:text-gray-100">
+                    <td className="border px-4 py-2 text-xl text-gray-900 dark:border-gray-700 dark:text-gray-100">
                       {pokemon.name}
                     </td>
                     {isLoggedIn && (
@@ -80,7 +73,7 @@ export function Edit() {
                           onClick={() => handleEditPokemonClick(pokemon.id)}
                           className="rounded bg-sky-500 px-4 py-1 text-slate-100 hover:bg-sky-600 dark:bg-blue-500 dark:hover:bg-blue-600"
                         >
-                          Edytuj
+                          Edit
                         </button>
                       </td>
                     )}

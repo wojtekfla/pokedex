@@ -44,14 +44,9 @@ export function PokemonCard({
     handleFavouriteClick(pokemon);
   };
 
-  // const handleRemoveFromFav = (e) => {
-  //   e.stopPropagation();
-  //   handleDeleteFavClick(pokemon);
-  // };
-
   const handleArenaClick = (e) => {
     e.stopPropagation();
-    // console.log('arena clicked')
+
     handleArena(pokemon.id);
   };
 

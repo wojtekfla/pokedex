@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext } from 'react'
 import { useDarkMode } from '../hooks/useDarkMode'
 
 export const ThemeContext = createContext()

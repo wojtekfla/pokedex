@@ -3,29 +3,18 @@ import { NavLink } from "react-router-dom";
 import { Button } from "../shared/Button.jsx";
 import pokemonLogo from "../../assets/pokemon.png";
 import { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeContext.jsx";
 import { DarkModeSwitch } from "../../components/subpages/Home/DarkModeSwitch.jsx";
 import { Logout } from "../subpages/Login/Logout.jsx";
 import { LoginContext } from "../../context/LoginContext.jsx";
 
-// const routes = [
-//   { name: "Home", id: 1, path: "/" },
-//   { name: "Favourites", id: 2, path: "favourites" },
-//   { name: "Arena", id: 3, path: "arena" },
-//   { name: "Ranking", id: 4, path: "ranking" },
-//   { name: "Edit", id: 5, path: "edit" },
-//   { name: "Login", id: 6, path: "login" },
-// ];
-
 export function MainLayout() {
-  const { darkMode, toggleDarkMode, clearDarkMode } = useContext(ThemeContext);
   const { loggedUser, isLoading } = useContext(LoginContext);
 
   if (isLoading) return null
 
   return (
     <>
-      <NavBar className="flex min-h-12 items-center justify-between bg-blue-200 p-2 py-3">
+      <NavBar className="flex min-h-12 items-center justify-between py-1 px-2 bg-sky-200 dark:bg-gradient-to-b dark:from-blue-800 dark:to-blue-400  ">
         <Wrapper className="flex cursor-pointer">
           <NavLink to="/">
             <div className="px-3 py-1">

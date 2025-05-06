@@ -38,27 +38,27 @@ export function MainLayout() {
 
           <Wrapper className="flex justify-center gap-4">
             <NavLink to="favourites">
-              <Button className="rounded bg-sky-500 px-3 py-1 text-white">
+              <Button className="rounded bg-sky-500 hover:bg-sky-600 px-3 py-1 text-white">
                 Favourites
               </Button>
             </NavLink>
             <NavLink to="arena">
-              <Button className="rounded bg-sky-500 px-3 py-1 text-white">
+              <Button className="rounded bg-sky-500 hover:bg-sky-600 px-3 py-1 text-white">
                 Arena
               </Button>
             </NavLink>
             <NavLink to="ranking">
-              <Button className="rounded bg-sky-500 px-3 py-1 text-white">
+              <Button className="rounded bg-sky-500 hover:bg-sky-600 px-3 py-1 text-white">
                 Ranking
               </Button>
             </NavLink>
             <NavLink to="edit">
-              <Button className="rounded bg-sky-500 px-3 py-1 text-white">
+              <Button className="rounded bg-sky-500 hover:bg-sky-600 px-3 py-1 text-white">
                 Edit
               </Button>
             </NavLink>
             <NavLink to="login">
-              <Button className="rounded bg-sky-500 px-3 py-1 text-white">
+              <Button className="rounded bg-sky-500 hover:bg-sky-600 px-3 py-1 text-white">
                 Login
               </Button>
             </NavLink>

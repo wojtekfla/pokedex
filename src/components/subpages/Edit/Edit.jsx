@@ -34,7 +34,7 @@ export function Edit() {
             <div className="mb-6 text-center">
               <button
                 onClick={handleCreateNewPokemonClick}
-                className="rounded bg-blue-600 px-4 py-2 text-gray-100 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                className="rounded bg-blue-500 px-4 py-2 text-gray-100 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
               >
                 Create new Pokemon
               </button>

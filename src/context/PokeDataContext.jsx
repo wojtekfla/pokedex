@@ -76,7 +76,7 @@ export const PokeDataProvider = ({ children }) => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchName]); // nie wiem czy to potrzebne
+  }, [searchName]); 
 
   // favourite
   function toggleFavourite(id) {

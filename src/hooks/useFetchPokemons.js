@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { API_URL, JSON_SERVER_URL } from "../utils/constants";
+import { API_URL } from "../utils/constants";
 
 export function useFetchPokemons() {
   const [pokemons, setPokemons] = useState([]);
@@ -36,28 +36,7 @@ export function useFetchPokemons() {
             };
           }),
         );
-
-        // ... dodaje funkcjonalność zależną od zalogowania, stąd zakomentowany kod ...
-        // console.log('Pokemony z API:', detailedPokemons)
-
-        // const jsonResponse = await fetch(JSON_SERVER_URL);
-        // const jsonPokemons = await jsonResponse.json();
-        // console.log("Pokemony z JSON Servera", jsonPokemons);
-
-        // const mergedPokemons = detailedPokemons.map((pokemon) => {
-        //   const foundPokemon = jsonPokemons.find((p) => p.id === pokemon.id);
-        //   return foundPokemon ? { ...pokemon, ...foundPokemon } : pokemon;
-        // });
-        // console.log("Merged Pokemons:", mergedPokemons);
-
-        // const newPokemons = jsonPokemons.filter(
-        //   (p) => !detailedPokemons.some((apiP) => apiP.id === p.id)
-        // )
-
-        // const finalPokemons = [...mergedPokemons, ...newPokemons]
-        // console.log('Finalna lista pokemonów', finalPokemons)
-
-        // setPokemons(finalPokemons)
+        
         setPokemons(detailedPokemons)
 
       } catch (err) {

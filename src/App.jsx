@@ -1,13 +1,27 @@
 import "./App.css";
 
-function App() {
-	return (
-		<>
-			<div>
-				<h1>Vite + React</h1>
-			</div>
-		</>
-	);
-}
+import { Outlet } from "react-router-dom";
+import { usePokeData } from "./context/PokeDataContext.jsx";
+import { MainLayout } from "./components/Layout/MainLayout.jsx";
+import { LoadingScreen } from "./components/shared/LoadingScreen.jsx";
+import { ErrorScreen } from "./components/shared/ErrorScreen.jsx";
 
-export default App;
+
+export function App() {
+  const { error, isLoading } = usePokeData();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <ErrorScreen message={error.message} />;
+  }
+
+  return (
+    <>
+      <MainLayout />
+      <Outlet />
+    </>
+  );
+}
